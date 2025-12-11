@@ -260,15 +260,20 @@ export default {
 }
 
 .game-header {
-  text-align: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 40px;
+  padding-top: 0;
   animation: fadeInDown 0.6s ease-out;
 }
 
 .back-button {
   position: absolute;
-  left: 20px;
-  top: 100px;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -281,12 +286,13 @@ export default {
   font-size: 0.9em;
   transition: all 0.3s ease;
   font-family: 'Orbitron', monospace;
+  z-index: 1;
 }
 
 .back-button:hover {
   background: rgba(0, 217, 255, 0.2);
   box-shadow: 0 0 15px rgba(0, 217, 255, 0.4);
-  transform: translateX(-3px);
+  transform: translateY(-50%) translateX(-3px);
 }
 
 .back-icon {
@@ -296,8 +302,10 @@ export default {
 .game-title {
   font-size: 3.5em;
   font-weight: 800;
-  margin-bottom: 16px;
+  margin: 0;
   letter-spacing: 2px;
+  text-align: center;
+  flex: 1;
 }
 
 .game-container {
@@ -589,7 +597,22 @@ export default {
     position: relative;
     left: 0;
     top: 0;
+    transform: none;
     margin-bottom: 20px;
+  }
+  
+  .back-button:hover {
+    transform: translateX(-3px);
+  }
+  
+  .game-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .game-title {
+    width: 100%;
+    margin-top: 20px;
   }
 
   .game-title {

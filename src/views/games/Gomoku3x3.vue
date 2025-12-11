@@ -218,30 +218,39 @@ export default {
 }
 
 .game-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 40px;
+  padding-top: 0;
   animation: fadeInDown 0.6s ease-out;
 }
 
 .back-button {
-  display: inline-flex;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
   align-items: center;
   gap: 8px;
-  background: transparent;
-  border: 1px solid var(--cyber-glass-border);
-  color: var(--cyber-text-secondary);
   padding: 10px 20px;
+  background: rgba(0, 217, 255, 0.1);
+  border: 1px solid var(--cyber-neon-cyan);
+  color: var(--cyber-neon-cyan);
   border-radius: 6px;
   cursor: pointer;
-  font-family: inherit;
-  font-size: 14px;
+  font-size: 0.9em;
   transition: all 0.3s ease;
-  margin-bottom: 20px;
+  font-family: 'Orbitron', monospace;
+  z-index: 1;
 }
 
 .back-button:hover {
-  border-color: var(--cyber-neon-cyan);
-  color: var(--cyber-neon-cyan);
-  background: rgba(0, 217, 255, 0.05);
+  background: rgba(0, 217, 255, 0.2);
+  box-shadow: 0 0 15px rgba(0, 217, 255, 0.4);
+  transform: translateY(-50%) translateX(-3px);
 }
 
 .back-icon {
@@ -249,9 +258,12 @@ export default {
 }
 
 .game-title {
-  font-size: 3em;
+  font-size: 3.5em;
   font-weight: 800;
+  margin: 0;
   letter-spacing: 2px;
+  text-align: center;
+  flex: 1;
 }
 
 .game-container {
@@ -502,9 +514,31 @@ export default {
   .gomoku-page {
     padding: 80px 16px 40px;
   }
+
+  .back-button {
+    position: relative;
+    left: 0;
+    top: 0;
+    transform: none;
+    margin-bottom: 20px;
+  }
+  
+  .back-button:hover {
+    transform: translateX(-3px);
+  }
+  
+  .game-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
   
   .game-title {
-    font-size: 2em;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .game-title {
+    font-size: 2.5em;
   }
   
   .game-board {

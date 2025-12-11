@@ -6,26 +6,26 @@
       </h1>
       <p class="page-subtitle">留下您的足迹，与我互动</p>
     </div>
-    
+
     <div class="board-container">
       <div class="cyber-card message-form-card">
         <h3 class="form-title neon-cyan">发表留言</h3>
         <div class="message-form">
           <div class="form-group">
             <label class="form-label neon-cyan">昵称</label>
-            <input 
-              type="text" 
-              class="cyber-input" 
+            <input
+              type="text"
+              class="cyber-input"
               v-model="newMessage.name"
               placeholder="输入您的昵称..."
               maxlength="20"
             />
           </div>
-          
+
           <div class="form-group">
             <label class="form-label neon-cyan">留言内容</label>
-            <textarea 
-              class="cyber-textarea" 
+            <textarea
+              class="cyber-textarea"
               v-model="newMessage.content"
               placeholder="写下您的留言..."
               rows="5"
@@ -37,18 +37,19 @@
               </span>
             </div>
           </div>
-          
-          <button 
-            class="cyber-button" 
+
+          <button
+            class="cyber-button"
             @click="submitMessage"
             :disabled="!canSubmit"
           >
-            <span v-if="!canSubmit">请填写完整信息</span>
+            <span v-if="loading">发送中...</span>
+            <span v-else-if="!canSubmit">请填写完整信息</span>
             <span v-else>发送留言</span>
           </button>
         </div>
       </div>
-      
+
       <div class="messages-section">
         <div class="messages-header">
           <h3 class="messages-title neon-green">留言列表</h3>
@@ -56,11 +57,11 @@
             共 {{ messages.length }} 条留言
           </div>
         </div>
-        
+
         <div class="messages-list">
           <transition-group name="message" tag="div">
-            <div 
-              v-for="message in messages" 
+            <div
+              v-for="message in messages"
               :key="message.id"
               class="cyber-card message-item"
             >
@@ -73,13 +74,13 @@
                   {{ formatTime(message.timestamp) }}
                 </div>
               </div>
-              
+
               <div class="message-content">
                 {{ message.content }}
               </div>
-              
+
               <div class="message-footer">
-                <button 
+                <button
                   class="like-btn"
                   @click="toggleLike(message.id)"
                   :class="{ 'liked': message.liked }"
@@ -90,7 +91,7 @@
               </div>
             </div>
           </transition-group>
-          
+
           <div v-if="messages.length === 0" class="empty-state cyber-card">
             <div class="empty-icon neon-purple">[暂无留言]</div>
             <div class="empty-text">成为第一个留言的人吧！</div>
@@ -102,6 +103,8 @@
 </template>
 
 <script>
+import { messageAPI } from '../utils/api';
+
 export default {
   name: 'MessageBoard',
   data() {
@@ -111,59 +114,97 @@ export default {
         content: ''
       },
       messages: [],
-      messageIdCounter: 0
+      loading: false
     }
   },
   computed: {
     canSubmit() {
-      return this.newMessage.name.trim() !== '' && 
-             this.newMessage.content.trim() !== '';
+      return this.newMessage.name.trim() !== '' &&
+             this.newMessage.content.trim() !== '' &&
+             !this.loading;
     }
   },
   mounted() {
     this.loadMessages();
   },
   methods: {
-    submitMessage() {
-      if (!this.canSubmit) return;
-      
-      const message = {
-        id: this.messageIdCounter++,
-        name: this.newMessage.name.trim(),
-        content: this.newMessage.content.trim(),
-        timestamp: Date.now(),
-        likes: 0,
-        liked: false
-      };
-      
-      this.messages.unshift(message);
-      this.saveMessages();
-      
-      this.newMessage.name = '';
-      this.newMessage.content = '';
-      
-      this.showNotification('留言发送成功！');
-    },
-    
-    toggleLike(messageId) {
-      const message = this.messages.find(m => m.id === messageId);
-      if (message) {
-        if (message.liked) {
-          message.likes--;
-          message.liked = false;
-        } else {
-          message.likes++;
-          message.liked = true;
+    async loadMessages() {
+      try {
+        this.loading = true;
+        const response = await messageAPI.getMessages();
+
+        if (response.success && response.data) {
+          this.messages = response.data;
+
+          // 检查每条留言的点赞状态
+          for (let message of this.messages) {
+            try {
+              const likeStatus = await messageAPI.checkLikeStatus(message.id);
+              if (likeStatus.success) {
+                message.liked = likeStatus.data.liked;
+              }
+            } catch (err) {
+              console.error('检查点赞状态失败:', err);
+            }
+          }
         }
-        this.saveMessages();
+      } catch (error) {
+        console.error('加载留言失败:', error);
+        this.showNotification('加载留言失败，请稍后重试', 'error');
+      } finally {
+        this.loading = false;
       }
     },
-    
+
+    async submitMessage() {
+      if (!this.canSubmit) return;
+
+      try {
+        this.loading = true;
+        const response = await messageAPI.submitMessage({
+          name: this.newMessage.name.trim(),
+          content: this.newMessage.content.trim()
+        });
+
+        if (response.success && response.data) {
+          // 将新留言添加到列表顶部
+          this.messages.unshift(response.data);
+
+          this.newMessage.name = '';
+          this.newMessage.content = '';
+
+          this.showNotification('留言发送成功！');
+        }
+      } catch (error) {
+        console.error('提交留言失败:', error);
+        this.showNotification(error.message || '提交留言失败，请稍后重试', 'error');
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async toggleLike(messageId) {
+      const message = this.messages.find(m => m.id === messageId);
+      if (!message) return;
+
+      try {
+        const response = await messageAPI.toggleLike(messageId);
+
+        if (response.success && response.data) {
+          message.likes = response.data.likes;
+          message.liked = response.data.liked;
+        }
+      } catch (error) {
+        console.error('点赞操作失败:', error);
+        this.showNotification('操作失败，请稍后重试', 'error');
+      }
+    },
+
     formatTime(timestamp) {
       const date = new Date(timestamp);
       const now = new Date();
       const diff = now - date;
-      
+
       if (diff < 60000) {
         return '刚刚';
       } else if (diff < 3600000) {
@@ -180,28 +221,10 @@ export default {
         });
       }
     },
-    
-    saveMessages() {
-      localStorage.setItem('cyberpunk-messages', JSON.stringify(this.messages));
-      localStorage.setItem('cyberpunk-message-id-counter', this.messageIdCounter.toString());
-    },
-    
-    loadMessages() {
-      const saved = localStorage.getItem('cyberpunk-messages');
-      const savedCounter = localStorage.getItem('cyberpunk-message-id-counter');
-      
-      if (saved) {
-        this.messages = JSON.parse(saved);
-      }
-      
-      if (savedCounter) {
-        this.messageIdCounter = parseInt(savedCounter, 10);
-      }
-    },
-    
-    showNotification(text) {
+
+    showNotification(text, type = 'success') {
       const notification = document.createElement('div');
-      notification.className = 'notification neon-green';
+      notification.className = `notification ${type === 'error' ? 'neon-pink' : 'neon-green'}`;
       notification.textContent = text;
       notification.style.cssText = `
         position: fixed;
@@ -210,14 +233,14 @@ export default {
         padding: 16px 28px;
         background: rgba(10, 10, 15, 0.95);
         backdrop-filter: blur(20px);
-        border: 1px solid var(--cyber-neon-green);
+        border: 1px solid ${type === 'error' ? 'var(--cyber-neon-pink)' : 'var(--cyber-neon-green)'};
         border-radius: 8px;
         z-index: 10000;
         animation: slideInRight 0.3s ease;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
       `;
       document.body.appendChild(notification);
-      
+
       setTimeout(() => {
         notification.style.animation = 'slideOutRight 0.3s ease';
         setTimeout(() => {
@@ -521,17 +544,17 @@ export default {
   .message-board-page {
     padding: 80px 16px 40px;
   }
-  
+
   .page-title {
     font-size: 2.5em;
   }
-  
+
   .messages-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
-  
+
   .message-header {
     flex-direction: column;
     align-items: flex-start;
