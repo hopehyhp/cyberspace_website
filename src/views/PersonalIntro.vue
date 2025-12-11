@@ -6,34 +6,34 @@
       </h1>
       <p class="page-subtitle">探索我的数字身份</p>
     </div>
-    
+
     <div class="intro-content-wrapper">
       <div class="cyber-card intro-container">
         <div class="intro-content">
           <div class="avatar-section">
             <div class="avatar-frame">
               <div class="avatar-placeholder">
-                <span class="neon-pink">[AVATAR]</span>
+                <img :src="avatarImage" alt="头像" class="avatar-image" />
               </div>
               <div class="avatar-border"></div>
             </div>
           </div>
-          
+
           <div class="info-section">
             <div class="info-item">
               <span class="label neon-cyan">姓名:</span>
-              <span class="value neon-green">[您的姓名]</span>
+              <span class="value neon-green">Hope hyhp</span>
             </div>
             <div class="info-item">
               <span class="label neon-cyan">职业:</span>
-              <span class="value neon-green">[您的职业]</span>
+              <span class="value neon-green">Full Stack Software Engineer</span>
             </div>
             <div class="info-item">
               <span class="label neon-cyan">技能:</span>
               <div class="skills">
-                <span 
-                  v-for="(skill, index) in skills" 
-                  :key="index" 
+                <span
+                  v-for="(skill, index) in skills"
+                  :key="index"
                   class="skill-tag neon-purple"
                 >
                   {{ skill }}
@@ -50,7 +50,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="stats-section">
           <div class="stat-item">
             <div class="stat-value neon-pink">∞</div>
@@ -71,11 +71,14 @@
 </template>
 
 <script>
+import avatarImage from '@/assets/userImage.png'
+
 export default {
   name: 'PersonalIntro',
   data() {
     return {
-      skills: ['Vue.js', 'JavaScript', 'CSS3', 'HTML5', '设计', '创意']
+      skills: ['Vue', 'Angular', 'TypeScripts', 'JavaScript', 'CSS3', 'HTML5'],
+      avatarImage: avatarImage
     }
   }
 }
@@ -167,6 +170,16 @@ export default {
     transparent
   );
   animation: rotate 4s linear infinite;
+  z-index: 1;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  position: relative;
+  z-index: 2;
 }
 
 @keyframes rotate {
@@ -248,7 +261,7 @@ export default {
 .skill-tag:hover {
   background: rgba(176, 38, 255, 0.2);
   transform: translateY(-3px);
-  box-shadow: 
+  box-shadow:
     0 4px 12px rgba(176, 38, 255, 0.3),
     0 0 20px currentColor;
 }
@@ -282,7 +295,7 @@ export default {
   background: rgba(0, 217, 255, 0.08);
   transform: translateY(-5px);
   border-color: var(--cyber-neon-cyan);
-  box-shadow: 
+  box-shadow:
     0 8px 24px rgba(0, 217, 255, 0.2),
     0 0 30px rgba(0, 217, 255, 0.1);
 }
@@ -339,26 +352,26 @@ export default {
   .personal-intro-page {
     padding: 80px 16px 40px;
   }
-  
+
   .page-title {
     font-size: 2.5em;
   }
-  
+
   .intro-content {
     grid-template-columns: 1fr;
     gap: 40px;
     text-align: center;
   }
-  
+
   .avatar-frame {
     margin: 0 auto;
   }
-  
+
   .stats-section {
     grid-template-columns: 1fr;
     gap: 16px;
   }
-  
+
   .description {
     text-align: left;
   }
