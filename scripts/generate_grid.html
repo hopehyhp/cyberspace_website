@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>九宫格切图器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0a0a;
+            color: #00d9ff;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        canvas {
+            border: 2px solid #00d9ff;
+            margin: 20px 0;
+            background: #0a0a0a;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+        }
+        button {
+            background: #00d9ff;
+            color: #0a0a0a;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #00ff88;
+            box-shadow: 0 0 20px #00ff88;
+            transform: translateY(-2px);
+        }
+        .info {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid #00d9ff;
+            border-radius: 4px;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .file-upload-label {
+            display: inline-block;
+            background: #00d9ff;
+            color: #0a0a0a;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .file-upload-label:hover {
+            background: #00ff88;
+            box-shadow: 0 0 20px #00ff88;
+            transform: translateY(-2px);
+        }
+        h1 {
+            text-shadow: 0 0 10px #00d9ff, 0 0 20px #00d9ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 九宫格切图器</h1>
+        <div class="info">
+            <p>您可以上传自己的图片，或者点击"随机生成"按钮生成随机图片，然后点击"切分并下载"按钮将其切分成9部分。</p>
+            <p>切分后的图片将自动下载到您的下载文件夹。</p>
+        </div>
+        
+        <canvas id="mainCanvas" width="600" height="600"></canvas>
+        
+        <div>
+            <label for="imageUpload" class="file-upload-label">上传图片</label>
+            <input type="file" id="imageUpload" accept="image/*" onchange="handleImageUpload(event)">
+            <button onclick="generateImage()">随机生成</button>
+            <button onclick="splitAndDownload()">切分并下载</button>
+        </div>
+        
+        <div id="status"></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('mainCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 赛博朋克配色方案
+        const cyberColors = [
+            '#00d9ff', // 青色
+            '#ff00ff', // 粉色
+            '#9d00ff', // 紫色
+            '#00ff88', // 绿色
+            '#ffd700', // 金色
+            '#00ffff', // 天蓝色
+            '#ff0080', // 深粉色
+            '#8000ff'  // 深紫色
+        ];
+        
+        // 生成随机颜色（从赛博朋克配色中）
+        function randomCyberColor() {
+            return cyberColors[Math.floor(Math.random() * cyberColors.length)];
+        }
+        
+        // 生成随机整数
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
+        // 生成随机浮点数
+        function randomFloat(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+        
+        function generateImage() {
+            const size = 600;
+            
+            // 清空画布，使用深色背景
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0, 0, size, size);
+            
+            // 绘制网格背景
+            ctx.strokeStyle = '#00d9ff';
+            ctx.lineWidth = 0.5;
+            ctx.globalAlpha = 0.3;
+            const gridSize = 30;
+            for (let x = 0; x <= size; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, size);
+                ctx.stroke();
+            }
+            for (let y = 0; y <= size; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(size, y);
+                ctx.stroke();
+            }
+            ctx.globalAlpha = 1.0;
+            
+            // 生成霓虹圆圈
+            const circleCount = randomInt(3, 8);
+            for (let i = 0; i < circleCount; i++) {
+                const x = randomInt(50, size - 50);
+                const y = randomInt(50, size - 50);
+                const radius = randomInt(30, 100);
+                const color = randomCyberColor();
+                
+                // 外发光效果
+                for (let offset = 0; offset < 15; offset += 3) {
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = 2;
+                    ctx.globalAlpha = 0.3 - offset * 0.02;
+                    ctx.beginPath();
+                    ctx.arc(x, y, radius + offset, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+                
+                // 主圆圈
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 3;
+                ctx.globalAlpha = 1.0;
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            
+            // 生成霓虹线条网络
+            const lineCount = randomInt(8, 15);
+            for (let i = 0; i < lineCount; i++) {
+                const color = randomCyberColor();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = randomInt(1, 3);
+                ctx.globalAlpha = randomFloat(0.5, 1.0);
+                
+                const x1 = randomInt(0, size);
+                const y1 = randomInt(0, size);
+                const x2 = randomInt(0, size);
+                const y2 = randomInt(0, size);
+                
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
+                
+                // 添加发光效果
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = color;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+            }
+            
+            // 生成几何图形（带霓虹效果）
+            const shapeCount = randomInt(5, 12);
+            for (let i = 0; i < shapeCount; i++) {
+                const shapeType = randomInt(0, 3);
+                const x = randomInt(50, size - 50);
+                const y = randomInt(50, size - 50);
+                const sizeShape = randomInt(40, 120);
+                const color = randomCyberColor();
+                
+                ctx.globalAlpha = randomFloat(0.4, 0.8);
+                ctx.fillStyle = color;
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                
+                switch(shapeType) {
+                    case 0: // 圆形
+                        ctx.beginPath();
+                        ctx.arc(x, y, sizeShape / 2, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.stroke();
+                        break;
+                    case 1: // 矩形
+                        ctx.fillRect(x - sizeShape / 2, y - sizeShape / 2, sizeShape, sizeShape);
+                        ctx.strokeRect(x - sizeShape / 2, y - sizeShape / 2, sizeShape, sizeShape);
+                        break;
+                    case 2: // 三角形
+                        ctx.beginPath();
+                        ctx.moveTo(x, y - sizeShape / 2);
+                        ctx.lineTo(x - sizeShape / 2, y + sizeShape / 2);
+                        ctx.lineTo(x + sizeShape / 2, y + sizeShape / 2);
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.stroke();
+                        break;
+                    case 3: // 六边形
+                        ctx.beginPath();
+                        for (let j = 0; j < 6; j++) {
+                            const angle = (Math.PI / 3) * j;
+                            const px = x + (sizeShape / 2) * Math.cos(angle);
+                            const py = y + (sizeShape / 2) * Math.sin(angle);
+                            if (j === 0) ctx.moveTo(px, py);
+                            else ctx.lineTo(px, py);
+                        }
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.stroke();
+                        break;
+                }
+            }
+            
+            // 重置透明度
+            ctx.globalAlpha = 1.0;
+            
+            // 添加数据流效果（垂直线条）
+            const dataStreamCount = randomInt(3, 6);
+            for (let i = 0; i < dataStreamCount; i++) {
+                const x = randomInt(0, size);
+                const color = randomCyberColor();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.globalAlpha = 0.6;
+                
+                const segments = randomInt(3, 8);
+                let currentY = 0;
+                for (let j = 0; j < segments; j++) {
+                    const segmentHeight = randomInt(20, 80);
+                    ctx.beginPath();
+                    ctx.moveTo(x, currentY);
+                    ctx.lineTo(x, currentY + segmentHeight);
+                    ctx.stroke();
+                    currentY += segmentHeight + randomInt(10, 30);
+                    if (currentY > size) break;
+                }
+            }
+            
+            // 添加随机光点
+            const dotCount = randomInt(10, 20);
+            for (let i = 0; i < dotCount; i++) {
+                const x = randomInt(0, size);
+                const y = randomInt(0, size);
+                const color = randomCyberColor();
+                const radius = randomInt(2, 6);
+                
+                ctx.fillStyle = color;
+                ctx.globalAlpha = randomFloat(0.6, 1.0);
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = color;
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+            
+            ctx.globalAlpha = 1.0;
+            
+            document.getElementById('status').innerHTML = '<p style="color: #00ff88;">✓ 随机图片已生成！现在可以切分并下载。</p>';
+        }
+        
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+            
+            // 检查文件类型
+            if (!file.type.startsWith('image/')) {
+                document.getElementById('status').innerHTML = '<p style="color: #ff00ff;">✗ 请选择图片文件！</p>';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const size = 600;
+                    
+                    // 清空画布，使用深色背景
+                    ctx.fillStyle = '#0a0a0a';
+                    ctx.fillRect(0, 0, size, size);
+                    
+                    // 计算缩放比例，保持图片比例并填充整个canvas
+                    const scale = Math.max(size / img.width, size / img.height);
+                    const scaledWidth = img.width * scale;
+                    const scaledHeight = img.height * scale;
+                    
+                    // 居中绘制图片
+                    const x = (size - scaledWidth) / 2;
+                    const y = (size - scaledHeight) / 2;
+                    
+                    ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
+                    
+                    document.getElementById('status').innerHTML = '<p style="color: #00ff88;">✓ 图片已上传并加载！现在可以切分并下载。</p>';
+                };
+                img.onerror = function() {
+                    document.getElementById('status').innerHTML = '<p style="color: #ff00ff;">✗ 图片加载失败，请重试！</p>';
+                };
+                img.src = e.target.result;
+            };
+            reader.onerror = function() {
+                document.getElementById('status').innerHTML = '<p style="color: #ff00ff;">✗ 文件读取失败，请重试！</p>';
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function splitAndDownload() {
+            const size = 600;
+            const cellSize = size / 3;
+            
+            // 检查canvas是否有内容
+            const imageData = ctx.getImageData(0, 0, size, size);
+            let hasContent = false;
+            for (let i = 0; i < imageData.data.length; i += 4) {
+                if (imageData.data[i + 3] > 0) { // 检查alpha通道
+                    hasContent = true;
+                    break;
+                }
+            }
+            
+            if (!hasContent) {
+                document.getElementById('status').innerHTML = '<p style="color: #ff00ff;">✗ 请先上传图片或生成图片！</p>';
+                return;
+            }
+            
+            // 创建临时canvas用于切分
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = cellSize;
+            tempCanvas.height = cellSize;
+            const tempCtx = tempCanvas.getContext('2d');
+            
+            // 切分并下载
+            for (let row = 0; row < 3; row++) {
+                for (let col = 0; col < 3; col++) {
+                    const partNum = row * 3 + col + 1;
+                    const x = col * cellSize;
+                    const y = row * cellSize;
+                    
+                    // 清空临时canvas
+                    tempCtx.clearRect(0, 0, cellSize, cellSize);
+                    
+                    // 复制对应区域
+                    tempCtx.drawImage(
+                        canvas,
+                        x, y, cellSize, cellSize,
+                        0, 0, cellSize, cellSize
+                    );
+                    
+                    // 转换为blob并下载
+                    tempCanvas.toBlob(function(blob) {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `grid-part-${partNum}.png`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    }, 'image/png');
+                }
+            }
+            
+            document.getElementById('status').innerHTML = '<p style="color: #00ff88;">✓ 已开始下载9个图片文件！请检查您的下载文件夹。</p>';
+        }
+    </script>
+</body>
+</html>
+

@@ -25,7 +25,12 @@
       
       <div class="hero-visual">
         <div class="cyber-grid">
-          <div class="grid-item" v-for="i in 9" :key="i"></div>
+          <div 
+            class="grid-item" 
+            v-for="i in 9" 
+            :key="i"
+            :style="{ backgroundImage: `url(${require(`@/assets/grid/grid-part-${i}.png`)})` }"
+          ></div>
         </div>
       </div>
     </div>
@@ -128,6 +133,9 @@ export default {
 .grid-item {
   aspect-ratio: 1;
   background: var(--cyber-glass);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border: 1px solid var(--cyber-glass-border);
   border-radius: 8px;
   position: relative;
