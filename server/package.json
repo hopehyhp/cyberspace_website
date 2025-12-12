@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "rebuild": "npm rebuild sqlite3",
+    "postinstall": "npm rebuild sqlite3"
   },
   "keywords": ["express", "api", "backend"],
   "author": "",
