@@ -1,8 +1,25 @@
 import axios from 'axios';
 
+// 根据环境自动选择 API 地址
+// 优先级：环境变量 > 生产环境相对路径 > 开发环境 localhost
+const getBaseURL = () => {
+  // 如果设置了环境变量，优先使用
+  if (process.env.VUE_APP_API_BASE_URL) {
+    return process.env.VUE_APP_API_BASE_URL;
+  }
+  
+  // 生产环境使用相对路径（通过 Nginx 反向代理）
+  if (process.env.NODE_ENV === 'production') {
+    return '/api';
+  }
+  
+  // 开发环境使用 localhost
+  return 'http://localhost:3000/api';
+};
+
 // 创建 axios 实例
 const api = axios.create({
-  baseURL: process.env.VUE_APP_API_BASE_URL || 'http://localhost:3000/api',
+  baseURL: getBaseURL(),
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
