@@ -29,6 +29,16 @@
           <div class="game-badge neon-green">NEW</div>
         </div>
         
+        <div 
+          class="cyber-card game-card"
+          @click="navigateToGame('tetris')"
+        >
+          <div class="game-icon neon-cyan">🧩</div>
+          <h3 class="game-title">俄罗斯方块</h3>
+          <p class="game-desc">经典消除游戏，挑战你的反应速度和策略思维</p>
+          <div class="game-badge neon-green">NEW</div>
+        </div>
+        
         <!-- 预留更多游戏位置 -->
         <div class="cyber-card game-card coming-soon">
           <div class="game-icon neon-purple">🎮</div>

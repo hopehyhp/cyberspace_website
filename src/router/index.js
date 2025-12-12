@@ -6,6 +6,7 @@ import MessageBoard from '../views/MessageBoard.vue'
 import Entertainment from '../views/Entertainment.vue'
 import Gomoku3x3 from '../views/games/Gomoku3x3.vue'
 import GuessNumber from '../views/games/GuessNumber.vue'
+import Tetris from '../views/games/Tetris.vue'
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,11 @@ const routes = [
     path: '/entertainment/guess-number',
     name: 'GuessNumber',
     component: GuessNumber
+  },
+  {
+    path: '/entertainment/tetris',
+    name: 'Tetris',
+    component: Tetris
   },
   {
     path: '*',
