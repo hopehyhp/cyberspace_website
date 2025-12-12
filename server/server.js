@@ -1,11 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const path = require('path');
 const db = require('./database/db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0'; // 监听所有网络接口，允许外部访问
 
 // 中间件
 app.use(cors());
@@ -27,9 +27,10 @@ app.get('/api/health', (req, res) => {
 db.init()
   .then(() => {
     // 启动服务器
-    app.listen(PORT, () => {
-      console.log(`🚀 服务器运行在 http://localhost:${PORT}`);
-      console.log(`📡 API 端点: http://localhost:${PORT}/api`);
+    app.listen(PORT, HOST, () => {
+      console.log(`🚀 服务器运行在 http://${HOST}:${PORT}`);
+      console.log(`📡 API 端点: http://${HOST}:${PORT}/api`);
+      console.log(`🌐 本地访问: http://localhost:${PORT}/api`);
     });
   })
   .catch((err) => {
