@@ -24,6 +24,7 @@
 - 🎮 **娱乐游戏** - 内置多款小游戏，包括：
   - 3x3 五子棋 - 经典五子棋的迷你版本
   - 猜数字游戏 - 考验逻辑推理能力
+  - 俄罗斯方块 - 经典消除游戏
 - 🎯 **单页应用** - 基于 Vue Router 实现流畅的页面切换
 - ⚡ **性能优化** - 轻量级设计，快速加载
 
@@ -56,20 +57,7 @@ cd ..
 
 4. **启动项目**
 
-**方式一：使用启动脚本（推荐）**
-
-Windows:
-```bash
-start.bat
-```
-
-Linux/Mac:
-```bash
-chmod +x start.sh
-./start.sh
-```
-
-**方式二：分别启动**
+分别启动前端和后端：
 
 终端 1 - 启动后端：
 ```bash
@@ -112,7 +100,9 @@ personal_website/
 │   └── favicon.ico        # 网站图标
 ├── src/                   # 前端源代码
 │   ├── assets/            # 静态资源（图片等）
-│   │   └── logo.png
+│   │   ├── grid/          # 网格图片资源
+│   │   ├── logo.png
+│   │   └── userImage.png
 │   ├── components/        # 可复用组件
 │   │   └── Navigation.vue # 导航栏组件
 │   ├── router/            # 路由配置
@@ -123,12 +113,13 @@ personal_website/
 │   │   └── api.js         # API 请求封装
 │   ├── views/             # 页面视图
 │   │   ├── games/         # 游戏相关页面
-│   │   │   ├── Gomoku3x3.vue
-│   │   │   └── GuessNumber.vue
-│   │   ├── Entertainment.vue
-│   │   ├── Home.vue
-│   │   ├── MessageBoard.vue
-│   │   └── PersonalIntro.vue
+│   │   │   ├── Gomoku3x3.vue    # 3x3 五子棋
+│   │   │   ├── GuessNumber.vue  # 猜数字游戏
+│   │   │   └── Tetris.vue       # 俄罗斯方块
+│   │   ├── Entertainment.vue    # 娱乐页面
+│   │   ├── Home.vue             # 首页
+│   │   ├── MessageBoard.vue     # 留言板
+│   │   └── PersonalIntro.vue    # 个人介绍
 │   ├── App.vue            # 根组件
 │   └── main.js            # 入口文件
 ├── server/                # 后端服务器
@@ -139,17 +130,22 @@ personal_website/
 │   │   └── messages.js    # 留言板路由
 │   ├── .env.example       # 环境变量示例
 │   ├── .gitignore
+│   ├── ecosystem.config.js # PM2 进程管理配置
 │   ├── package.json       # 后端依赖
 │   ├── README.md          # 后端文档
 │   └── server.js          # 服务器入口
+├── scripts/               # 工具脚本
+│   ├── generate_grid.html # 网格生成工具
+│   ├── split_image.js    # 图片分割脚本（Node.js）
+│   ├── split_image.py    # 图片分割脚本（Python）
+│   └── README.md         # 脚本说明
 ├── .gitignore
 ├── babel.config.js
+├── jsconfig.json         # JavaScript 配置
 ├── package.json           # 前端依赖
 ├── README.md
-├── README_BACKEND.md      # 后端详细文档
-├── start.bat              # Windows 启动脚本
-├── start.sh               # Linux/Mac 启动脚本
-└── vue.config.js
+├── vue.config.js         # Vue CLI 配置
+└── LICENSE               # MIT 许可证
 ```
 
 ## 🛠 技术栈
@@ -167,7 +163,9 @@ personal_website/
 - **Web 框架**: Express 4.18.2
 - **数据库**: SQLite3 5.1.6
 - **跨域处理**: CORS 2.8.5
-- **开发工具**: Nodemon (开发模式自动重启)
+- **请求解析**: body-parser 1.20.2
+- **环境变量**: dotenv 16.3.1
+- **开发工具**: Nodemon 3.0.1 (开发模式自动重启)
 
 ## 📝 开发说明
 
@@ -184,8 +182,8 @@ personal_website/
 ### 添加新游戏
 
 1. 在 `src/views/games/` 目录下创建游戏组件
-2. 在路由中添加游戏路由
-3. 在 `Entertainment.vue` 中添加游戏卡片
+2. 在 `src/router/index.js` 中添加游戏路由配置
+3. 在 `src/views/Entertainment.vue` 中添加游戏卡片
 
 ## 🤝 贡献指南
 
@@ -208,30 +206,6 @@ personal_website/
 
 本项目采用 [MIT License](LICENSE) 开源协议。
 
-```
-MIT License
-
-Copyright (c) 2024 Personal Website Contributors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
 ## 📧 联系方式
 
 如有问题或建议，欢迎通过以下方式联系：
@@ -239,9 +213,15 @@ SOFTWARE.
 - 提交 [Issue](https://github.com/hopehyhp/personal_website/issues)
 - 发送 Pull Request
 
-## ⭐ 致谢
+## 🎯 路由说明
 
-感谢所有为本项目做出贡献的开发者！
+- `/` - 首页
+- `/about` - 个人介绍
+- `/messages` - 留言板
+- `/entertainment` - 娱乐游戏中心
+- `/entertainment/gomoku3x3` - 3x3 五子棋
+- `/entertainment/guess-number` - 猜数字游戏
+- `/entertainment/tetris` - 俄罗斯方块
 
 ---
 

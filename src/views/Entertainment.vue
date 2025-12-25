@@ -39,6 +39,16 @@
           <div class="game-badge neon-green">NEW</div>
         </div>
         
+        <div 
+          class="cyber-card game-card"
+          @click="navigateToGame('guess-idiom')"
+        >
+          <div class="game-icon neon-purple">📝</div>
+          <h3 class="game-title">猜成语</h3>
+          <p class="game-desc">通过拼音和颜色提示，猜出4字成语，考验你的中文水平</p>
+          <div class="game-badge neon-green">NEW</div>
+        </div>
+        
         <!-- 预留更多游戏位置 -->
         <div class="cyber-card game-card coming-soon">
           <div class="game-icon neon-purple">🎮</div>
