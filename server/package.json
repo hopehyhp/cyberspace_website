@@ -9,18 +9,22 @@
     "rebuild": "npm rebuild sqlite3",
     "postinstall": "npm rebuild sqlite3"
   },
-  "keywords": ["express", "api", "backend"],
+  "keywords": [
+    "express",
+    "api",
+    "backend"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5",
+    "bcryptjs": "^3.0.3",
     "body-parser": "^1.20.2",
-    "sqlite3": "^5.1.6",
-    "dotenv": "^16.3.1"
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.6"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
   }
 }
-

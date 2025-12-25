@@ -53,6 +53,20 @@ function createTables() {
       )
     `;
 
+    const createUsersTable = `
+      CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL,
+        email TEXT,
+        phone TEXT,
+        status TEXT DEFAULT 'active',
+        role TEXT DEFAULT 'user',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+
     db.serialize(() => {
       db.run(createMessagesTable, (err) => {
         if (err) {
@@ -70,7 +84,41 @@ function createTables() {
           return;
         }
         console.log('✅ message_likes 表已创建/已存在');
-        resolve();
+      });
+
+      db.run(createUsersTable, (err) => {
+        if (err) {
+          console.error('❌ 创建 users 表失败:', err.message);
+          reject(err);
+          return;
+        }
+        console.log('✅ users 表已创建/已存在');
+        
+        // 检查并添加 password 字段（如果表已存在但没有该字段）
+        db.all("PRAGMA table_info(users)", [], (err, rows) => {
+          if (err) {
+            console.error('❌ 检查表结构失败:', err.message);
+            resolve();
+            return;
+          }
+          
+          const hasPassword = rows && rows.some(row => row.name === 'password');
+          if (!hasPassword) {
+            db.run("ALTER TABLE users ADD COLUMN password TEXT", (err) => {
+              if (err) {
+                // 如果字段已存在，忽略错误
+                if (!err.message.includes('duplicate column')) {
+                  console.error('❌ 添加 password 字段失败:', err.message);
+                }
+              } else {
+                console.log('✅ 已添加 password 字段到 users 表');
+              }
+              resolve();
+            });
+          } else {
+            resolve();
+          }
+        });
       });
     });
   });

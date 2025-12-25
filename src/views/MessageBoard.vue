@@ -8,18 +8,20 @@
     </div>
 
     <div class="board-container">
-      <div class="cyber-card message-form-card">
+      <!-- 已登录用户显示留言表单 -->
+      <div v-if="isAuthenticated" class="cyber-card message-form-card">
         <h3 class="form-title neon-cyan">发表留言</h3>
         <div class="message-form">
           <div class="form-group">
-            <label class="form-label neon-cyan">昵称</label>
+            <label class="form-label neon-cyan">用户名</label>
             <input
               type="text"
               class="cyber-input"
-              v-model="newMessage.name"
-              placeholder="输入您的昵称..."
-              maxlength="20"
+              :value="currentUsername"
+              disabled
+              style="opacity: 0.7; cursor: not-allowed;"
             />
+            <div class="field-hint">将使用您的注册用户名</div>
           </div>
 
           <div class="form-group">
@@ -44,8 +46,19 @@
             :disabled="!canSubmit"
           >
             <span v-if="loading">发送中...</span>
-            <span v-else-if="!canSubmit">请填写完整信息</span>
+            <span v-else-if="!canSubmit">请填写留言内容</span>
             <span v-else>发送留言</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 未登录用户显示提示 -->
+      <div v-else class="cyber-card message-form-card">
+        <h3 class="form-title neon-cyan">发表留言</h3>
+        <div class="login-prompt">
+          <p class="prompt-text">您需要登录后才能发表留言</p>
+          <button class="cyber-button" @click="showLoginModal">
+            立即登录
           </button>
         </div>
       </div>
@@ -80,14 +93,25 @@
               </div>
 
               <div class="message-footer">
-                <button
-                  class="like-btn"
-                  @click="toggleLike(message.id)"
-                  :class="{ 'liked': message.liked }"
-                >
-                  <span class="like-icon">{{ message.liked ? '♥' : '♡' }}</span>
-                  <span class="like-count">{{ message.likes }}</span>
-                </button>
+                <div class="footer-left">
+                  <button
+                    class="like-btn"
+                    @click="toggleLike(message.id)"
+                    :class="{ 'liked': message.liked }"
+                  >
+                    <span class="like-icon">{{ message.liked ? '♥' : '♡' }}</span>
+                    <span class="like-count">{{ message.likes }}</span>
+                  </button>
+                </div>
+                <div class="footer-right" v-if="isAdmin">
+                  <button
+                    class="delete-btn"
+                    @click="confirmDelete(message.id)"
+                    title="删除留言"
+                  >
+                    <span class="delete-icon">🗑</span>
+                  </button>
+                </div>
               </div>
             </div>
           </transition-group>
@@ -99,33 +123,61 @@
         </div>
       </div>
     </div>
+
+    <!-- 登录模态框 -->
+    <AuthModal
+      :visible="showAuthModal"
+      default-mode="login"
+      @close="showAuthModal = false"
+      @login-success="handleLoginSuccess"
+    />
   </div>
 </template>
 
 <script>
-import { messageAPI } from '../utils/api';
+import { messageAPI, authUtils } from '../utils/api';
+import AuthModal from '../components/AuthModal.vue';
 
 export default {
   name: 'MessageBoard',
+  components: {
+    AuthModal
+  },
   data() {
     return {
       newMessage: {
-        name: '',
         content: ''
       },
       messages: [],
-      loading: false
+      loading: false,
+      showAuthModal: false
     }
   },
   computed: {
+    isAuthenticated() {
+      return authUtils.isAuthenticated();
+    },
+    isAdmin() {
+      return authUtils.isAdmin();
+    },
+    currentUsername() {
+      const user = authUtils.getUser();
+      return user ? user.username : '';
+    },
     canSubmit() {
-      return this.newMessage.name.trim() !== '' &&
-             this.newMessage.content.trim() !== '' &&
-             !this.loading;
+      return this.newMessage.content.trim() !== '' &&
+             !this.loading &&
+             this.isAuthenticated;
     }
   },
   mounted() {
     this.loadMessages();
+    // 监听localStorage变化（用于跨标签页同步）
+    window.addEventListener('storage', this.handleStorageChange);
+  },
+  beforeDestroy() {
+    // 清理事件监听器
+    window.removeEventListener('storage', this.handleStorageChange);
   },
   methods: {
     async loadMessages() {
@@ -159,25 +211,85 @@ export default {
     async submitMessage() {
       if (!this.canSubmit) return;
 
+      // 检查是否已登录
+      if (!this.isAuthenticated) {
+        this.showNotification('请先登录后再发表留言', 'error');
+        this.showLoginModal();
+        return;
+      }
+
       try {
         this.loading = true;
         const response = await messageAPI.submitMessage({
-          name: this.newMessage.name.trim(),
           content: this.newMessage.content.trim()
         });
 
-        if (response.success && response.data) {
+        // 如果成功返回，response 应该包含 data
+        if (response && response.data) {
           // 将新留言添加到列表顶部
           this.messages.unshift(response.data);
 
-          this.newMessage.name = '';
           this.newMessage.content = '';
 
           this.showNotification('留言发送成功！');
+        } else {
+          // 如果响应格式不正确
+          this.showNotification('提交留言失败，请稍后重试', 'error');
         }
       } catch (error) {
         console.error('提交留言失败:', error);
         this.showNotification(error.message || '提交留言失败，请稍后重试', 'error');
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    showLoginModal() {
+      this.showAuthModal = true;
+    },
+
+    handleLoginSuccess() {
+      this.showAuthModal = false;
+      this.showNotification('登录成功！现在可以发表留言了', 'success');
+      // 登录成功后刷新页面，确保状态完全更新
+      setTimeout(() => {
+        this.$router.go(0);
+      }, 500);
+    },
+    
+    handleStorageChange(event) {
+      // 当localStorage中的user数据变化时，重新加载留言列表（跨标签页同步）
+      if (event.key === 'user') {
+        this.$nextTick(() => {
+          this.loadMessages();
+        });
+      }
+    },
+
+    confirmDelete(messageId) {
+      if (confirm('确定要删除这条留言吗？此操作不可恢复。')) {
+        this.deleteMessage(messageId);
+      }
+    },
+
+    async deleteMessage(messageId) {
+      if (!this.isAdmin) {
+        this.showNotification('您没有权限删除留言', 'error');
+        return;
+      }
+
+      try {
+        this.loading = true;
+        const response = await messageAPI.deleteMessage(messageId);
+
+        if (response.success) {
+          // 从列表中移除已删除的留言
+          this.messages = this.messages.filter(m => m.id !== messageId);
+          this.showNotification('留言已删除', 'success');
+        }
+      } catch (error) {
+        console.error('删除留言失败:', error);
+        this.showNotification(error.message || '删除留言失败，请稍后重试', 'error');
       } finally {
         this.loading = false;
       }
@@ -425,7 +537,19 @@ export default {
 
 .message-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .like-btn {
@@ -468,6 +592,38 @@ export default {
   font-size: 0.95em;
 }
 
+.delete-btn {
+  background: transparent;
+  border: 1px solid var(--cyber-neon-pink);
+  color: var(--cyber-neon-pink);
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+.delete-btn:hover {
+  background: rgba(255, 0, 128, 0.15);
+  box-shadow: 0 0 15px rgba(255, 0, 128, 0.3);
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+.delete-icon {
+  font-size: 1.1em;
+  transition: transform 0.3s ease;
+}
+
+.delete-btn:hover .delete-icon {
+  transform: scale(1.2);
+}
+
 .empty-state {
   text-align: center;
   padding: 80px 20px;
@@ -483,6 +639,25 @@ export default {
 .empty-text {
   font-size: 1.2em;
   letter-spacing: 2px;
+}
+
+.login-prompt {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.prompt-text {
+  font-size: 1.1em;
+  color: var(--cyber-text-secondary);
+  margin-bottom: 24px;
+  letter-spacing: 1px;
+}
+
+.field-hint {
+  font-size: 0.85em;
+  color: var(--cyber-text-secondary);
+  margin-top: 6px;
+  opacity: 0.7;
 }
 
 @keyframes fadeInDown {

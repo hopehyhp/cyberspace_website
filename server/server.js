@@ -23,7 +23,7 @@ const corsOptions = {
       'http://localhost:8080',
       'http://localhost:3000',
       'http://127.0.0.1:8080',
-      'http://127.0.0.1:3000'
+      'http://0.0.0.0:3000'
     ];
     
     // 如果没有origin（比如Postman、curl或移动应用），允许通过
@@ -48,7 +48,7 @@ const corsOptions = {
   },
   credentials: true, // 允许携带凭证（cookies等）
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'], // 允许的HTTP方法
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'], // 允许的请求头
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'X-User-Id'], // 允许的请求头
   exposedHeaders: ['Content-Length', 'Content-Type'], // 暴露给前端的响应头
   maxAge: 86400 // 预检请求的缓存时间（24小时）
 };
@@ -63,6 +63,8 @@ app.set('trust proxy', true);
 
 // API 路由
 app.use('/api/messages', require('./routes/messages'));
+app.use('/api/users', require('./routes/users'));
+app.use('/api/auth', require('./routes/auth'));
 
 // 健康检查
 app.get('/api/health', (req, res) => {
