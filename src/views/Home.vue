@@ -23,19 +23,19 @@
           </div>
         </div>
       </div>
-      
+
       <div class="hero-visual">
         <div class="cyber-grid">
-          <div 
-            class="grid-item" 
-            v-for="i in 9" 
+          <div
+            class="grid-item"
+            v-for="i in 9"
             :key="i"
             :style="{ backgroundImage: `url(${require(`@/assets/grid/grid-part-${i}.png`)})` }"
           ></div>
         </div>
       </div>
     </div>
-    
+
     <div class="features-section">
       <div class="cyber-card feature-card">
         <div class="feature-icon neon-cyan">⚡</div>
@@ -45,7 +45,7 @@
           查看详情 →
         </router-link>
       </div>
-      
+
       <div class="cyber-card feature-card">
         <div class="feature-icon neon-pink">✉</div>
         <h3 class="feature-title">留言互动</h3>
@@ -54,7 +54,7 @@
           前往留言 →
         </router-link>
       </div>
-      
+
       <div class="cyber-card feature-card">
         <div class="feature-icon neon-purple">🎮</div>
         <h3 class="feature-title">娱乐游戏</h3>
@@ -114,7 +114,7 @@ export default {
         '相信自己，你能作茧自缚，就能破茧成蝶。',
         '生活不是林黛玉，不会因为忧伤而风情万种。'
       ]
-      
+
       // 使用日期作为种子，确保每天显示不同的鸡汤
       const today = new Date()
       const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24)
@@ -159,12 +159,6 @@ export default {
   color: var(--cyber-text-secondary);
   margin-bottom: 40px;
   line-height: 1.6;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
 }
 
 .daily-section {
@@ -373,15 +367,15 @@ export default {
     gap: 40px;
     text-align: center;
   }
-  
+
   .hero-title {
     font-size: 3em;
   }
-  
+
   .hero-visual {
     height: 300px;
   }
-  
+
   .hero-actions {
     justify-content: center;
   }
@@ -407,15 +401,15 @@ export default {
   .home-page {
     padding: 60px 16px 30px;
   }
-  
+
   .hero-title {
     font-size: 2.5em;
   }
-  
+
   .hero-subtitle {
     font-size: 1.1em;
   }
-  
+
   .features-section {
     grid-template-columns: 1fr;
   }
