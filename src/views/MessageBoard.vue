@@ -369,7 +369,7 @@ export default {
 <style scoped>
 .message-board-page {
   min-height: calc(100vh - 70px);
-  padding: 100px 20px 60px;
+  padding: 20px 20px 60px;
   position: relative;
   z-index: 10;
   max-width: 1000px;
@@ -717,7 +717,7 @@ export default {
 
 @media (max-width: 768px) {
   .message-board-page {
-    padding: 80px 16px 40px;
+    padding: 20px 16px 40px;
   }
 
   .page-title {

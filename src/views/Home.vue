@@ -38,11 +38,20 @@
 
     <div class="features-section">
       <div class="cyber-card feature-card">
-        <div class="feature-icon neon-cyan">⚡</div>
-        <h3 class="feature-title">个人介绍</h3>
-        <p class="feature-desc">了解我的技能、经历和理念</p>
-        <router-link to="/about" class="feature-link">
-          查看详情 →
+        <div class="feature-icon neon-cyan">📚</div>
+        <h3 class="feature-title">技术分享</h3>
+        <p class="feature-desc">记录技术心得，分享实用经验</p>
+        <router-link to="/tech-sharing" class="feature-link">
+          前往查看 →
+        </router-link>
+      </div>
+
+      <div class="cyber-card feature-card">
+        <div class="feature-icon neon-purple">🎮</div>
+        <h3 class="feature-title">娱乐游戏</h3>
+        <p class="feature-desc">放松心情，享受游戏时光</p>
+        <router-link to="/entertainment" class="feature-link">
+          开始游戏 →
         </router-link>
       </div>
 
@@ -56,11 +65,11 @@
       </div>
 
       <div class="cyber-card feature-card">
-        <div class="feature-icon neon-purple">🎮</div>
-        <h3 class="feature-title">娱乐游戏</h3>
-        <p class="feature-desc">放松心情，享受游戏时光</p>
-        <router-link to="/entertainment" class="feature-link">
-          开始游戏 →
+        <div class="feature-icon neon-cyan">⚡</div>
+        <h3 class="feature-title">个人介绍</h3>
+        <p class="feature-desc">了解我的技能、经历和理念</p>
+        <router-link to="/about" class="feature-link">
+          查看详情 →
         </router-link>
       </div>
     </div>
@@ -128,7 +137,7 @@ export default {
 <style scoped>
 .home-page {
   min-height: calc(100vh - 70px);
-  padding: 80px 20px 40px;
+  padding: 20px 20px 40px;
   position: relative;
   z-index: 10;
 }
@@ -399,7 +408,7 @@ export default {
 
 @media (max-width: 768px) {
   .home-page {
-    padding: 60px 16px 30px;
+    padding: 20px 16px 30px;
   }
 
   .hero-title {

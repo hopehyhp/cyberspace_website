@@ -8,9 +8,9 @@
     </main>
     <footer class="site-footer">
       <div class="footer-text">
-        <span class="neon-green">[SYSTEM]</span>
-        <span class="footer-info">欢迎来到我的数字世界</span>
-        <span class="neon-purple">[ONLINE]</span>
+        <span class="neon-cyan">[Hope]</span>
+        <span class="footer-info">个人学习娱乐、欢迎探讨</span>
+        <span class="neon-purple">[Website]</span>
       </div>
     </footer>
   </div>
@@ -71,7 +71,7 @@ export default {
   .main-content {
     padding-top: 60px;
   }
-  
+
   .footer-text {
     flex-direction: column;
     gap: 10px;

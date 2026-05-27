@@ -449,7 +449,7 @@ export default {
 <style scoped>
 .user-management-page {
   min-height: calc(100vh - 70px);
-  padding: 100px 20px 60px;
+  padding: 20px 20px 60px;
   position: relative;
   z-index: 10;
   max-width: 1400px;
@@ -890,7 +890,7 @@ export default {
 
 @media (max-width: 768px) {
   .user-management-page {
-    padding: 80px 16px 40px;
+    padding: 20px 16px 40px;
   }
 
   .page-title {

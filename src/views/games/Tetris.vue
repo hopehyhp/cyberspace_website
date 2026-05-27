@@ -567,7 +567,7 @@ export default {
 <style scoped>
 .tetris-page {
   min-height: calc(100vh - 70px);
-  padding: 40px 20px 30px;
+  padding: 20px 20px 30px;
   position: relative;
   z-index: 10;
   max-width: 1200px;
@@ -885,7 +885,7 @@ export default {
 
 @media (max-width: 768px) {
   .tetris-page {
-    padding: 30px 16px 20px;
+    padding: 20px 16px 20px;
   }
 
   .back-button {

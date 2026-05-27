@@ -8,6 +8,9 @@ import UserManagement from '../views/UserManagement.vue'
 import Gomoku3x3 from '../views/games/Gomoku3x3.vue'
 import GuessNumber from '../views/games/GuessNumber.vue'
 import Tetris from '../views/games/Tetris.vue'
+import TechSharing from '../views/TechSharing.vue'
+import CommonQuestions from '../views/tech-sharing/CommonQuestions.vue'
+import CommonMethods from '../views/tech-sharing/CommonMethods.vue'
 import { authUtils } from '../utils/api'
 // import GuessIdiom from '../views/games/GuessIdiom.vue'
 
@@ -33,6 +36,21 @@ const routes = [
     path: '/entertainment',
     name: 'Entertainment',
     component: Entertainment
+  },
+  {
+    path: '/tech-sharing',
+    name: 'TechSharing',
+    component: TechSharing
+  },
+  {
+    path: '/tech-sharing/common-questions',
+    name: 'CommonQuestions',
+    component: CommonQuestions
+  },
+  {
+    path: '/tech-sharing/common-methods',
+    name: 'CommonMethods',
+    component: CommonMethods
   },
   {
     path: '/users',
