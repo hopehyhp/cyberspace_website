@@ -22,6 +22,15 @@
               {{ currentPlayer === 'X' ? '玩家 X' : '玩家 O' }}
             </span>
           </div>
+          <div class="piece-counts">
+            <span class="count-item">
+              <span class="neon-cyan">✕</span> × {{ playerXPieceCount }}/3
+            </span>
+            <span class="count-divider">|</span>
+            <span class="count-item">
+              <span class="neon-pink">○</span> × {{ playerOPieceCount }}/3
+            </span>
+          </div>
           <div class="game-status">
             <span 
               class="status-text"
@@ -72,7 +81,8 @@
           <li>在3x3的棋盘上，两名玩家轮流下棋</li>
           <li>玩家X使用 ✕ 标记，玩家O使用 ○ 标记</li>
           <li>率先在横、竖或对角线上连成3子的玩家获胜</li>
-          <li>如果棋盘填满且无人获胜，则为平局</li>
+          <li>每名玩家场上最多同时拥有<strong>3颗</strong>棋子</li>
+          <li>下第4颗棋子时，最早落下的棋子会被<strong>自动清除</strong></li>
         </ul>
       </div>
     </div>
@@ -88,7 +98,10 @@ export default {
       currentPlayer: 'X',
       gameStatus: 'playing', // 'playing', 'win', 'draw'
       winningCells: [],
-      movesCount: 0
+      movesCount: 0,
+      // 追踪每个玩家棋子落子顺序（最早的在索引0）
+      playerXMoves: [],
+      playerOMoves: []
     }
   },
   computed: {
@@ -100,30 +113,54 @@ export default {
       } else {
         return '游戏进行中...'
       }
+    },
+    playerXPieceCount() {
+      return this.playerXMoves.length
+    },
+    playerOPieceCount() {
+      return this.playerOMoves.length
     }
   },
   methods: {
     makeMove(index) {
-      // 如果游戏已结束或该位置已有棋子，则不允许下棋
-      if (this.board[index] || this.gameStatus !== 'playing') {
+      // 如果游戏已结束，不允许下棋
+      if (this.gameStatus !== 'playing') {
         return
+      }
+      
+      const playerMoves = this.currentPlayer === 'X' ? this.playerXMoves : this.playerOMoves
+      
+      // 判断是否在替换自己最早的那颗棋子（放在同一位置）
+      const isReplacingOwn = playerMoves.length >= 3 && playerMoves[0] === index
+      
+      // 目标位置被对手棋子占据，不允许下棋
+      if (this.board[index] && !isReplacingOwn) {
+        return
+      }
+      
+      // 如果该玩家场上已有3颗棋子，且不是放在同一位置，先移除最早的那一颗
+      if (playerMoves.length >= 3 && !isReplacingOwn) {
+        const oldestIndex = playerMoves.shift()
+        this.$set(this.board, oldestIndex, null)
       }
       
       // 下棋
       this.$set(this.board, index, this.currentPlayer)
+      
+      // 更新落子顺序记录
+      if (isReplacingOwn) {
+        // 替换同一位置：移除最早的记录，将新记录加到末尾
+        playerMoves.shift()
+        playerMoves.push(index)
+      } else {
+        playerMoves.push(index)
+      }
       this.movesCount++
       
       // 检查是否获胜
       if (this.checkWin()) {
         this.gameStatus = 'win'
         this.showNotification(`${this.currentPlayer === 'X' ? '玩家 X' : '玩家 O'} 获胜！`)
-        return
-      }
-      
-      // 检查是否平局
-      if (this.movesCount === 9) {
-        this.gameStatus = 'draw'
-        this.showNotification('平局！')
         return
       }
       
@@ -164,6 +201,8 @@ export default {
       this.gameStatus = 'playing'
       this.winningCells = []
       this.movesCount = 0
+      this.playerXMoves = []
+      this.playerOMoves = []
     },
     
     goBack() {
@@ -283,6 +322,8 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
   padding-bottom: 20px;
   border-bottom: 1px solid var(--cyber-glass-border);
 }
@@ -295,6 +336,26 @@ export default {
 .player-name {
   font-weight: 600;
   font-size: 1.2em;
+}
+
+.piece-counts {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.95em;
+  color: var(--cyber-text-secondary);
+}
+
+.count-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.count-divider {
+  color: var(--cyber-glass-border);
+  font-size: 0.8em;
 }
 
 .status-text {
