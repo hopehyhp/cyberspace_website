@@ -31,11 +31,7 @@
             <div class="info-item">
               <span class="label neon-cyan">技能:</span>
               <div class="skills">
-                <span
-                  v-for="(skill, index) in skills"
-                  :key="index"
-                  class="skill-tag neon-purple"
-                >
+                <span v-for="(skill, index) in skills" :key="index" class="skill-tag neon-purple">
                   {{ skill }}
                 </span>
               </div>
@@ -53,12 +49,27 @@
 
         <div class="stats-section">
           <div class="stat-item">
-                <div class="stat-value neon-pink">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.263.82-.583 0-.288-.01-1.05-.016-2.06-3.338.726-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.757-1.333-1.757-1.09-.744.083-.729.083-.729 1.205.085 1.84 1.238 1.84 1.238 1.07 1.835 2.809 1.305 3.495.998.108-.775.418-1.305.762-1.605-2.665-.304-5.466-1.333-5.466-5.933 0-1.31.469-2.381 1.235-3.221-.123-.303-.535-1.523.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.984-.399 3.003-.404 1.018.005 2.046.138 3.006.404 2.289-1.552 3.295-1.23 3.295-1.23.653 1.653.241 2.873.118 3.176.77.84 1.233 1.911 1.233 3.221 0 4.61-2.804 5.625-5.476 5.921.43.372.814 1.102.814 2.222 0 1.606-.014 2.903-.014 3.296 0 .322.216.699.825.58C20.565 21.796 24 17.298 24 12c0-6.63-5.37-12-12-12z"/>
-                  </svg>
-                  <a class="stat-value neon-pink href-text" href="https://github.com/hopehyhp" target="_blank" rel="noopener noreferrer" aria-label="GitHub - hopehyhp">hopehyhp</a>
-                </div>
+            <div class="stat-value neon-pink">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.263.82-.583 0-.288-.01-1.05-.016-2.06-3.338.726-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.757-1.333-1.757-1.09-.744.083-.729.083-.729 1.205.085 1.84 1.238 1.84 1.238 1.07 1.835 2.809 1.305 3.495.998.108-.775.418-1.305.762-1.605-2.665-.304-5.466-1.333-5.466-5.933 0-1.31.469-2.381 1.235-3.221-.123-.303-.535-1.523.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.984-.399 3.003-.404 1.018.005 2.046.138 3.006.404 2.289-1.552 3.295-1.23 3.295-1.23.653 1.653.241 2.873.118 3.176.77.84 1.233 1.911 1.233 3.221 0 4.61-2.804 5.625-5.476 5.921.43.372.814 1.102.814 2.222 0 1.606-.014 2.903-.014 3.296 0 .322.216.699.825.58C20.565 21.796 24 17.298 24 12c0-6.63-5.37-12-12-12z"
+                />
+              </svg>
+              <a
+                class="stat-value neon-pink href-text"
+                href="https://github.com/hopehyhp"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub - hopehyhp"
+                >hopehyhp</a
+              >
+            </div>
             <div class="stat-label">项目</div>
           </div>
           <div class="stat-item">
@@ -76,17 +87,17 @@
 </template>
 
 <script>
-import avatarImage from '@/assets/userImage.png'
+import avatarImage from '@/assets/userImage.png';
 
 export default {
   name: 'PersonalIntro',
   data() {
     return {
       skills: ['Vue', 'Angular', 'TypeScripts', 'JavaScript', 'CSS3', 'HTML5'],
-      avatarImage: avatarImage
-    }
-  }
-}
+      avatarImage: avatarImage,
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -168,12 +179,7 @@ export default {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(0, 217, 255, 0.1),
-    transparent
-  );
+  background: linear-gradient(45deg, transparent, rgba(0, 217, 255, 0.1), transparent);
   animation: rotate 4s linear infinite;
   z-index: 1;
 }
@@ -209,7 +215,8 @@ export default {
 }
 
 @keyframes border-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.6;
     transform: scale(1);
   }
@@ -266,9 +273,7 @@ export default {
 .skill-tag:hover {
   background: rgba(176, 38, 255, 0.2);
   transform: translateY(-3px);
-  box-shadow:
-    0 4px 12px rgba(176, 38, 255, 0.3),
-    0 0 20px currentColor;
+  box-shadow: 0 4px 12px rgba(176, 38, 255, 0.3), 0 0 20px currentColor;
 }
 
 .description {
@@ -300,9 +305,7 @@ export default {
   background: rgba(0, 217, 255, 0.08);
   transform: translateY(-5px);
   border-color: var(--cyber-neon-cyan);
-  box-shadow:
-    0 8px 24px rgba(0, 217, 255, 0.2),
-    0 0 30px rgba(0, 217, 255, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 217, 255, 0.2), 0 0 30px rgba(0, 217, 255, 0.1);
 }
 
 .stat-value {
@@ -313,7 +316,8 @@ export default {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
@@ -353,11 +357,11 @@ export default {
   }
 }
 
- .href-text {
-   font-size: 2rem;
-   padding-left: 12px;
-   text-decoration: blink;
- }
+.href-text {
+  font-size: 2rem;
+  padding-left: 12px;
+  text-decoration: blink;
+}
 
 @media (max-width: 768px) {
   .personal-intro-page {
@@ -388,4 +392,3 @@ export default {
   }
 }
 </style>
-

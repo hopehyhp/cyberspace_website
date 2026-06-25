@@ -9,19 +9,13 @@
 
     <div class="modules-section">
       <div class="modules-grid">
-        <div
-          class="cyber-card module-card"
-          @click="navigateToSub('common-questions')"
-        >
+        <div class="cyber-card module-card" @click="navigateToSub('common-questions')">
           <div class="module-icon neon-purple">❓</div>
           <h3 class="module-title">常见问题解析</h3>
           <p class="module-desc">梳理开发中经常遇到的问题，提供清晰的分析与解决方案</p>
         </div>
 
-        <div
-          class="cyber-card module-card"
-          @click="navigateToSub('common-methods')"
-        >
+        <div class="cyber-card module-card" @click="navigateToSub('common-methods')">
           <div class="module-icon neon-cyan">💡</div>
           <h3 class="module-title">常见方法举例</h3>
           <p class="module-desc">汇总实用技巧与代码示例，帮助快速上手常见开发场景</p>
@@ -36,10 +30,10 @@ export default {
   name: 'TechSharingPage',
   methods: {
     navigateToSub(subName) {
-      this.$router.push(`/tech-sharing/${subName}`)
-    }
-  }
-}
+      this.$router.push(`/tech-sharing/${subName}`);
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -102,9 +96,7 @@ export default {
 .module-card:hover {
   transform: translateY(-8px) scale(1.02);
   border-color: var(--cyber-neon-cyan);
-  box-shadow:
-    var(--cyber-shadow-lg),
-    0 0 30px rgba(0, 217, 255, 0.3),
+  box-shadow: var(--cyber-shadow-lg), 0 0 30px rgba(0, 217, 255, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 

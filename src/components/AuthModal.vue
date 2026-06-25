@@ -9,18 +9,8 @@
       </div>
 
       <div class="auth-tabs">
-        <button
-          class="auth-tab"
-          :class="{ active: isLogin }"
-          @click="switchToLogin"
-        >
-          登录
-        </button>
-        <button
-          class="auth-tab"
-          :class="{ active: !isLogin }"
-          @click="switchToRegister"
-        >
+        <button class="auth-tab" :class="{ active: isLogin }" @click="switchToLogin">登录</button>
+        <button class="auth-tab" :class="{ active: !isLogin }" @click="switchToRegister">
           注册
         </button>
       </div>
@@ -95,11 +85,7 @@
             {{ error }}
           </div>
 
-          <button
-            type="submit"
-            class="cyber-button submit-btn"
-            :disabled="loading || !canSubmit"
-          >
+          <button type="submit" class="cyber-button submit-btn" :disabled="loading || !canSubmit">
             <span v-if="loading">{{ isLogin ? '登录中...' : '注册中...' }}</span>
             <span v-else>{{ isLogin ? '登录' : '注册' }}</span>
           </button>
@@ -117,12 +103,12 @@ export default {
   props: {
     visible: {
       type: Boolean,
-      default: false
+      default: false,
     },
     defaultMode: {
       type: String,
-      default: 'login' // 'login' or 'register'
-    }
+      default: 'login', // 'login' or 'register'
+    },
   },
   data() {
     return {
@@ -135,20 +121,20 @@ export default {
         username: '',
         password: '',
         email: '',
-        phone: ''
-      }
+        phone: '',
+      },
     };
   },
   computed: {
     canSubmit() {
-      const usernameValid = this.form.username.trim().length >= 6 && 
-                           this.form.username.trim().length <= 12 && 
-                           !this.usernameError;
-      const passwordValid = this.form.password.length >= 6 && 
-                           this.form.password.length <= 12 && 
-                           !this.passwordError;
+      const usernameValid =
+        this.form.username.trim().length >= 6 &&
+        this.form.username.trim().length <= 12 &&
+        !this.usernameError;
+      const passwordValid =
+        this.form.password.length >= 6 && this.form.password.length <= 12 && !this.passwordError;
       return usernameValid && passwordValid;
-    }
+    },
   },
   watch: {
     visible(newVal) {
@@ -162,7 +148,7 @@ export default {
         this.isLogin = newVal === 'login';
         this.resetForm();
       }
-    }
+    },
   },
   methods: {
     switchToLogin() {
@@ -216,7 +202,7 @@ export default {
         username: '',
         password: '',
         email: '',
-        phone: ''
+        phone: '',
       };
       this.error = '';
       this.usernameError = '';
@@ -226,7 +212,7 @@ export default {
       // 先进行验证
       this.validateUsername();
       this.validatePassword();
-      
+
       if (!this.canSubmit || this.loading) {
         if (!this.usernameError && this.form.username.trim().length > 0) {
           this.validateUsername();
@@ -245,36 +231,34 @@ export default {
         if (this.isLogin) {
           response = await authAPI.login({
             username: this.form.username.trim(),
-            password: this.form.password
+            password: this.form.password,
           });
         } else {
           response = await authAPI.register({
             username: this.form.username.trim(),
             password: this.form.password,
             email: this.form.email.trim() || null,
-            phone: this.form.phone.trim() || null
+            phone: this.form.phone.trim() || null,
           });
         }
 
         if (response.success && response.data) {
           // 保存用户信息
           authUtils.setUser(response.data);
-          
+
           // 触发登录成功事件
           this.$emit('login-success', response.data);
-          
+
           // 关闭模态框
           this.close();
-          
+
           // 显示成功消息
-          this.showNotification(
-            this.isLogin ? '登录成功！' : '注册成功！',
-            'success'
-          );
+          this.showNotification(this.isLogin ? '登录成功！' : '注册成功！', 'success');
         }
       } catch (error) {
         console.error('认证失败:', error);
-        this.error = error.message || (this.isLogin ? '登录失败，请检查用户名和密码' : '注册失败，请稍后重试');
+        this.error =
+          error.message || (this.isLogin ? '登录失败，请检查用户名和密码' : '注册失败，请稍后重试');
       } finally {
         this.loading = false;
       }
@@ -294,7 +278,9 @@ export default {
         padding: 16px 28px;
         background: rgba(10, 10, 15, 0.95);
         backdrop-filter: blur(20px);
-        border: 1px solid ${type === 'error' ? 'var(--cyber-neon-pink)' : 'var(--cyber-neon-green)'};
+        border: 1px solid ${
+          type === 'error' ? 'var(--cyber-neon-pink)' : 'var(--cyber-neon-green)'
+        };
         border-radius: 8px;
         z-index: 10001;
         animation: slideInRight 0.3s ease;
@@ -310,8 +296,8 @@ export default {
           }
         }, 300);
       }, 2000);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -558,4 +544,3 @@ export default {
   }
 }
 </style>
-

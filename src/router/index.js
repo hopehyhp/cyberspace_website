@@ -1,77 +1,77 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import PersonalIntro from '../views/PersonalIntro.vue'
-import MessageBoard from '../views/MessageBoard.vue'
-import Entertainment from '../views/Entertainment.vue'
-import UserManagement from '../views/UserManagement.vue'
-import Gomoku3x3 from '../views/games/Gomoku3x3.vue'
-import GuessNumber from '../views/games/GuessNumber.vue'
-import Tetris from '../views/games/Tetris.vue'
-import TechSharing from '../views/TechSharing.vue'
-import CommonQuestions from '../views/tech-sharing/CommonQuestions.vue'
-import CommonMethods from '../views/tech-sharing/CommonMethods.vue'
-import { authUtils } from '../utils/api'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Home from '../views/Home.vue';
+import PersonalIntro from '../views/PersonalIntro.vue';
+import MessageBoard from '../views/MessageBoard.vue';
+import Entertainment from '../views/Entertainment.vue';
+import UserManagement from '../views/UserManagement.vue';
+import Gomoku3x3 from '../views/games/Gomoku3x3.vue';
+import GuessNumber from '../views/games/GuessNumber.vue';
+import Tetris from '../views/games/Tetris.vue';
+import TechSharing from '../views/TechSharing.vue';
+import CommonQuestions from '../views/tech-sharing/CommonQuestions.vue';
+import CommonMethods from '../views/tech-sharing/CommonMethods.vue';
+import { authUtils } from '../utils/api';
 // import GuessIdiom from '../views/games/GuessIdiom.vue'
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
   },
   {
     path: '/about',
     name: 'PersonalIntro',
-    component: PersonalIntro
+    component: PersonalIntro,
   },
   {
     path: '/messages',
     name: 'MessageBoard',
-    component: MessageBoard
+    component: MessageBoard,
   },
   {
     path: '/entertainment',
     name: 'Entertainment',
-    component: Entertainment
+    component: Entertainment,
   },
   {
     path: '/tech-sharing',
     name: 'TechSharing',
-    component: TechSharing
+    component: TechSharing,
   },
   {
     path: '/tech-sharing/common-questions',
     name: 'CommonQuestions',
-    component: CommonQuestions
+    component: CommonQuestions,
   },
   {
     path: '/tech-sharing/common-methods',
     name: 'CommonMethods',
-    component: CommonMethods
+    component: CommonMethods,
   },
   {
     path: '/users',
     name: 'UserManagement',
     component: UserManagement,
-    meta: { requiresAdmin: true }
+    meta: { requiresAdmin: true },
   },
   {
     path: '/entertainment/gomoku3x3',
     name: 'Gomoku3x3',
-    component: Gomoku3x3
+    component: Gomoku3x3,
   },
   {
     path: '/entertainment/guess-number',
     name: 'GuessNumber',
-    component: GuessNumber
+    component: GuessNumber,
   },
   {
     path: '/entertainment/tetris',
     name: 'Tetris',
-    component: Tetris
+    component: Tetris,
   },
   // {
   //   path: '/entertainment/guess-idiom',
@@ -80,9 +80,9 @@ const routes = [
   // },
   {
     path: '*',
-    redirect: '/'
-  }
-]
+    redirect: '/',
+  },
+];
 
 const router = new VueRouter({
   mode: 'history',
@@ -90,12 +90,12 @@ const router = new VueRouter({
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
-      return savedPosition
+      return savedPosition;
     } else {
-      return { x: 0, y: 0 }
+      return { x: 0, y: 0 };
     }
-  }
-})
+  },
+});
 
 // 路由守卫
 router.beforeEach((to, from, next) => {
@@ -106,14 +106,14 @@ router.beforeEach((to, from, next) => {
       // 未登录，重定向到首页并显示提示
       next({
         path: '/',
-        query: { redirect: to.fullPath }
-      })
-      
+        query: { redirect: to.fullPath },
+      });
+
       // 显示提示消息
       setTimeout(() => {
-        const notification = document.createElement('div')
-        notification.className = 'notification neon-pink'
-        notification.textContent = '请先登录管理员账户'
+        const notification = document.createElement('div');
+        notification.className = 'notification neon-pink';
+        notification.textContent = '请先登录管理员账户';
         notification.style.cssText = `
           position: fixed;
           top: 90px;
@@ -126,35 +126,35 @@ router.beforeEach((to, from, next) => {
           z-index: 10001;
           animation: slideInRight 0.3s ease;
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        `
-        document.body.appendChild(notification)
+        `;
+        document.body.appendChild(notification);
 
         setTimeout(() => {
-          notification.style.animation = 'slideOutRight 0.3s ease'
+          notification.style.animation = 'slideOutRight 0.3s ease';
           setTimeout(() => {
             if (document.body.contains(notification)) {
-              document.body.removeChild(notification)
+              document.body.removeChild(notification);
             }
-          }, 300)
-        }, 3000)
-      }, 100)
-      
-      return
+          }, 300);
+        }, 3000);
+      }, 100);
+
+      return;
     }
-    
+
     // 检查用户是否是管理员
     if (!authUtils.isAdmin()) {
       // 不是管理员，重定向到首页并显示提示
       next({
         path: '/',
-        query: { redirect: to.fullPath }
-      })
-      
+        query: { redirect: to.fullPath },
+      });
+
       // 显示提示消息
       setTimeout(() => {
-        const notification = document.createElement('div')
-        notification.className = 'notification neon-pink'
-        notification.textContent = '您没有权限访问此页面'
+        const notification = document.createElement('div');
+        notification.className = 'notification neon-pink';
+        notification.textContent = '您没有权限访问此页面';
         notification.style.cssText = `
           position: fixed;
           top: 90px;
@@ -167,26 +167,25 @@ router.beforeEach((to, from, next) => {
           z-index: 10001;
           animation: slideInRight 0.3s ease;
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        `
-        document.body.appendChild(notification)
+        `;
+        document.body.appendChild(notification);
 
         setTimeout(() => {
-          notification.style.animation = 'slideOutRight 0.3s ease'
+          notification.style.animation = 'slideOutRight 0.3s ease';
           setTimeout(() => {
             if (document.body.contains(notification)) {
-              document.body.removeChild(notification)
+              document.body.removeChild(notification);
             }
-          }, 300)
-        }, 3000)
-      }, 100)
-      
-      return
+          }, 300);
+        }, 3000);
+      }, 100);
+
+      return;
     }
   }
-  
+
   // 允许访问
-  next()
-})
+  next();
+});
 
-export default router
-
+export default router;

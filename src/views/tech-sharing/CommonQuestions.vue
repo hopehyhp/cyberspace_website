@@ -23,9 +23,7 @@
           <div class="category-icon" :class="category.colorClass">{{ category.icon }}</div>
           <h3 class="category-title">{{ category.name }}</h3>
           <p class="category-desc">{{ category.desc }}</p>
-          <div class="category-count">
-            {{ getQuestionCount(category.id) }} 个问题
-          </div>
+          <div class="category-count">{{ getQuestionCount(category.id) }} 个问题</div>
         </div>
       </div>
     </div>
@@ -47,11 +45,7 @@
     </div>
 
     <!-- 答案弹窗 -->
-    <div
-      v-if="activeQuestion"
-      class="answer-modal-overlay"
-      @click.self="closeAnswer"
-    >
+    <div v-if="activeQuestion" class="answer-modal-overlay" @click.self="closeAnswer">
       <div class="answer-modal cyber-card">
         <div class="modal-header">
           <span class="modal-category" :class="currentCategoryColorClass">
@@ -68,7 +62,10 @@
           >
             {{ paragraph }}
           </p>
-          <pre v-if="activeQuestion.code" class="code-block"><code>{{ activeQuestion.code }}</code></pre>
+          <pre
+            v-if="activeQuestion.code"
+            class="code-block"
+          ><code>{{ activeQuestion.code }}</code></pre>
         </div>
       </div>
     </div>
@@ -88,22 +85,22 @@ export default {
           name: 'Vue',
           icon: '💚',
           desc: '组件、响应式、生命周期等 Vue 框架相关问题',
-          colorClass: 'neon-green'
+          colorClass: 'neon-green',
         },
         {
           id: 'javascript',
           name: 'JavaScript',
           icon: '⚡',
           desc: '作用域、异步、原型链等 JS 语言基础问题',
-          colorClass: 'neon-cyan'
+          colorClass: 'neon-cyan',
         },
         {
           id: 'typescript',
           name: 'TypeScript',
           icon: '🔷',
           desc: '类型系统、泛型、接口等 TS 类型相关问题',
-          colorClass: 'neon-purple'
-        }
+          colorClass: 'neon-purple',
+        },
       ],
       questionBank: {
         vue: [
@@ -113,8 +110,8 @@ export default {
             answer: [
               'v-if 是「真正」的条件渲染：条件为 false 时，元素不会被渲染到 DOM 中；切换时会触发组件的创建与销毁。',
               'v-show 只是通过 CSS display 控制显示隐藏，元素始终存在于 DOM 中。',
-              '频繁切换显示状态时，优先用 v-show（开销更小）；条件很少改变、或需要配合 v-else 时，用 v-if 更合适。'
-            ]
+              '频繁切换显示状态时，优先用 v-show（开销更小）；条件很少改变、或需要配合 v-else 时，用 v-if 更合适。',
+            ],
           },
           {
             id: 'vue-2',
@@ -122,7 +119,7 @@ export default {
             answer: [
               'computed 用于根据已有数据「派生」新值，有缓存：依赖不变时不会重新计算，适合模板中直接使用的计算结果。',
               'watch 用于监听某个数据变化后执行「副作用」逻辑，如发请求、操作 DOM、打印日志等。',
-              '简单记忆：需要「算出一个值」用 computed；需要「数据变了之后做某事」用 watch。'
+              '简单记忆：需要「算出一个值」用 computed；需要「数据变了之后做某事」用 watch。',
             ],
             code: `// computed：派生值
 computed: {
@@ -136,7 +133,7 @@ watch: {
   userId(newId) {
     this.fetchUserData(newId)
   }
-}`
+}`,
           },
           {
             id: 'vue-3',
@@ -145,7 +142,7 @@ watch: {
               'Vue 2 的响应式基于 Object.defineProperty，无法检测「数组索引赋值」和「对象新增属性」。',
               '数组请使用 splice、push 等变异方法，或使用 Vue.set / this.$set。',
               '对象新增属性同样需要用 this.$set(obj, key, value) 才能触发视图更新。',
-              'Vue 3 使用 Proxy，已能自动检测这类变化，但 Vue 2 项目中仍需注意上述写法。'
+              'Vue 3 使用 Proxy，已能自动检测这类变化，但 Vue 2 项目中仍需注意上述写法。',
             ],
             code: `// ❌ 可能不触发更新
 this.list[0] = 'new'
@@ -154,7 +151,7 @@ this.user.age = 18
 // ✅ 推荐写法
 this.$set(this.list, 0, 'new')
 this.$set(this.user, 'age', 18)
-this.list.splice(0, 1, 'new')`
+this.list.splice(0, 1, 'new')`,
           },
           {
             id: 'vue-4',
@@ -163,7 +160,7 @@ this.list.splice(0, 1, 'new')`
               '父 → 子：通过 props 向子组件传递数据。',
               '子 → 父：子组件通过 $emit 触发事件，父组件在模板中监听。',
               '父组件需要调用子组件方法或访问数据时，可使用 ref 获取子组件实例。',
-              '跨多层组件可用 provide / inject，或借助 Vuex / Pinia 等状态管理。'
+              '跨多层组件可用 provide / inject，或借助 Vuex / Pinia 等状态管理。',
             ],
             code: `<!-- 父组件 -->
 <Child :msg="message" @update="handleUpdate" ref="child" />
@@ -174,7 +171,7 @@ methods: {
   notifyParent() {
     this.$emit('update', newValue)
   }
-}`
+}`,
           },
           {
             id: 'vue-5',
@@ -182,13 +179,13 @@ methods: {
             answer: [
               'key 帮助 Vue 识别每个节点的身份，在列表增删、重排时能高效复用 DOM，而不是盲目重新渲染。',
               'key 应使用唯一且稳定的值（如 id），不要用数组 index 作为 key（在列表顺序会变化时容易出 bug）。',
-              '错误使用 key 可能导致输入框内容错位、组件状态混乱等问题。'
+              '错误使用 key 可能导致输入框内容错位、组件状态混乱等问题。',
             ],
             code: `<!-- ✅ 使用唯一 id -->
 <div v-for="item in list" :key="item.id">
 
 <!-- ⚠️ 列表会排序/删除时，避免用 index -->
-<div v-for="(item, index) in list" :key="index">`
+<div v-for="(item, index) in list" :key="index">`,
           },
           {
             id: 'vue-6',
@@ -196,8 +193,8 @@ methods: {
             answer: [
               'created：实例创建完成，data、methods 已可用，但 DOM 尚未挂载，适合发请求、初始化数据。',
               'mounted：DOM 已挂载，可以访问 $el、操作 DOM、初始化第三方库（如图表、地图）。',
-              '一般数据请求放在 created 即可；需要依赖 DOM 节点的逻辑放在 mounted。'
-            ]
+              '一般数据请求放在 created 即可；需要依赖 DOM 节点的逻辑放在 mounted。',
+            ],
           },
           {
             id: 'vue-7',
@@ -205,14 +202,14 @@ methods: {
             answer: [
               'Vue 更新 DOM 是异步的：数据变化后，DOM 不会立刻更新，而是等同一事件循环中的多次数据变更结束后批量更新。',
               '若在修改数据后立即操作 DOM，可能拿到的是更新前的旧内容。',
-              'this.$nextTick(callback) 会在 DOM 更新完成后执行回调，确保能访问到最新的 DOM 状态。'
+              'this.$nextTick(callback) 会在 DOM 更新完成后执行回调，确保能访问到最新的 DOM 状态。',
             ],
             code: `this.message = '新内容'
 // 此时 DOM 可能还未更新
 this.$nextTick(() => {
   console.log(this.$refs.text.innerText)
-})`
-          }
+})`,
+          },
         ],
         javascript: [
           {
@@ -222,11 +219,11 @@ this.$nextTick(() => {
               'var 存在变量提升，可在声明前访问（值为 undefined），且没有块级作用域。',
               'let 和 const 有块级作用域，不存在变量提升，在声明前访问会报错（暂时性死区）。',
               'const 声明的是常量引用，不能重新赋值；但对象/数组的内容仍可修改。',
-              '实际开发中优先使用 const，需要重新赋值时用 let，避免使用 var。'
+              '实际开发中优先使用 const，需要重新赋值时用 let，避免使用 var。',
             ],
             code: `const user = { name: 'Tom' }
 user.name = 'Jerry'  // ✅ 可以修改属性
-// user = {}         // ❌ 不能重新赋值`
+// user = {}         // ❌ 不能重新赋值`,
           },
           {
             id: 'js-2',
@@ -234,8 +231,8 @@ user.name = 'Jerry'  // ✅ 可以修改属性
             answer: [
               '== 会进行类型转换后再比较，例如 1 == "1" 为 true。',
               '=== 严格相等，不会进行类型转换，类型不同直接返回 false。',
-              '开发中应始终使用 === 和 !==，避免隐式类型转换带来的意外结果。'
-            ]
+              '开发中应始终使用 === 和 !==，避免隐式类型转换带来的意外结果。',
+            ],
           },
           {
             id: 'js-3',
@@ -243,7 +240,7 @@ user.name = 'Jerry'  // ✅ 可以修改属性
             answer: [
               '闭包是指函数能够「记住」并访问其词法作用域中的变量，即使函数在其作用域外执行。',
               '常见场景：数据私有化、工厂函数、防抖节流等。',
-              '注意：闭包会持有外部变量的引用，不当使用可能导致内存无法释放。'
+              '注意：闭包会持有外部变量的引用，不当使用可能导致内存无法释放。',
             ],
             code: `function createCounter() {
   let count = 0
@@ -254,7 +251,7 @@ user.name = 'Jerry'  // ✅ 可以修改属性
 }
 const counter = createCounter()
 counter() // 1
-counter() // 2`
+counter() // 2`,
           },
           {
             id: 'js-4',
@@ -262,7 +259,7 @@ counter() // 2`
             answer: [
               'Promise 是异步编程的一种方案，代表一个将来才会结束的操作结果。',
               'async/await 是基于 Promise 的语法糖，让异步代码写起来像同步代码一样清晰。',
-              'async 函数始终返回 Promise；await 会暂停函数执行，等待 Promise 完成后再继续。'
+              'async 函数始终返回 Promise；await 会暂停函数执行，等待 Promise 完成后再继续。',
             ],
             code: `async function fetchData() {
   try {
@@ -272,7 +269,7 @@ counter() // 2`
   } catch (err) {
     console.error(err)
   }
-}`
+}`,
           },
           {
             id: 'js-5',
@@ -280,9 +277,9 @@ counter() // 2`
             answer: [
               'JavaScript 是单线程的，Event Loop 负责协调同步代码、微任务和宏任务的执行顺序。',
               '同步代码先执行；异步任务分为宏任务（setTimeout、setInterval 等）和微任务（Promise.then 等）。',
-              '每轮循环：执行一个宏任务 → 清空所有微任务 → 可能渲染 → 进入下一轮。'
-            ]
-          }
+              '每轮循环：执行一个宏任务 → 清空所有微任务 → 可能渲染 → 进入下一轮。',
+            ],
+          },
         ],
         typescript: [
           {
@@ -291,8 +288,8 @@ counter() // 2`
             answer: [
               'TypeScript 是 JavaScript 的超集，在 JS 基础上增加了静态类型系统。',
               'TS 代码需要编译为 JS 后才能运行，编译阶段就能发现类型错误。',
-              'TS 提供了接口、泛型、枚举等特性，适合大型项目和团队协作。'
-            ]
+              'TS 提供了接口、泛型、枚举等特性，适合大型项目和团队协作。',
+            ],
           },
           {
             id: 'ts-2',
@@ -301,14 +298,14 @@ counter() // 2`
               '两者都可以描述对象结构，大部分场景可以互换使用。',
               'interface 支持声明合并（同名 interface 会自动合并），type 不支持。',
               'type 更灵活，可以定义联合类型、交叉类型、元组等复杂类型。',
-              '描述对象结构时优先 interface；需要联合类型或复杂类型组合时用 type。'
+              '描述对象结构时优先 interface；需要联合类型或复杂类型组合时用 type。',
             ],
             code: `interface User {
   name: string
 }
 
 type Status = 'active' | 'inactive'
-type ID = string | number`
+type ID = string | number`,
           },
           {
             id: 'ts-3',
@@ -316,12 +313,12 @@ type ID = string | number`
             answer: [
               'any：关闭类型检查，可以赋任意值，应尽量避免使用。',
               'unknown：类型安全的 any，使用前必须先进行类型收窄（如 typeof、instanceof）。',
-              'never：表示永远不会发生的值，常用于抛出错误的函数或 exhaustive check。'
+              'never：表示永远不会发生的值，常用于抛出错误的函数或 exhaustive check。',
             ],
             code: `let value: unknown = 'hello'
 if (typeof value === 'string') {
   console.log(value.toUpperCase()) // ✅ 类型收窄后可用
-}`
+}`,
           },
           {
             id: 'ts-4',
@@ -329,14 +326,14 @@ if (typeof value === 'string') {
             answer: [
               '泛型让函数、类、接口在保持类型安全的同时具备复用性，避免使用 any 丢失类型信息。',
               '使用时传入具体类型参数，编译器会根据传入的类型进行推断和检查。',
-              '常见场景：通用 API 响应包装、可复用的数据结构、工具函数等。'
+              '常见场景：通用 API 响应包装、可复用的数据结构、工具函数等。',
             ],
             code: `function wrap<T>(value: T): { data: T } {
   return { data: value }
 }
 
 const num = wrap(42)       // { data: number }
-const str = wrap('hello')  // { data: string }`
+const str = wrap('hello')  // { data: string }`,
           },
           {
             id: 'ts-5',
@@ -344,66 +341,66 @@ const str = wrap('hello')  // { data: string }`
             answer: [
               '可选属性用 ? 标记，表示该属性可以不存在，例如 name?: string。',
               'readonly 标记的属性只能在初始化时赋值，之后不可修改。',
-              'Partial<T> 可将所有属性变为可选；Readonly<T> 可将所有属性变为只读。'
+              'Partial<T> 可将所有属性变为可选；Readonly<T> 可将所有属性变为只读。',
             ],
             code: `interface Config {
   readonly id: string
   title: string
   desc?: string
-}`
-          }
-        ]
-      }
-    }
+}`,
+          },
+        ],
+      },
+    };
   },
   computed: {
     currentQuestions() {
-      if (!this.selectedCategory) return []
-      return this.questionBank[this.selectedCategory] || []
+      if (!this.selectedCategory) return [];
+      return this.questionBank[this.selectedCategory] || [];
     },
     currentCategory() {
-      if (!this.selectedCategory) return null
-      return this.categories.find(c => c.id === this.selectedCategory)
+      if (!this.selectedCategory) return null;
+      return this.categories.find(c => c.id === this.selectedCategory);
     },
     currentCategoryName() {
-      return this.currentCategory ? this.currentCategory.name : ''
+      return this.currentCategory ? this.currentCategory.name : '';
     },
     currentCategoryColorClass() {
-      return this.currentCategory ? this.currentCategory.colorClass : ''
+      return this.currentCategory ? this.currentCategory.colorClass : '';
     },
     backButtonText() {
-      return this.selectedCategory ? '返回分类' : '返回技术分享'
+      return this.selectedCategory ? '返回分类' : '返回技术分享';
     },
     pageSubtitle() {
       if (!this.selectedCategory) {
-        return '选择技术领域，查看常见问题与解答'
+        return '选择技术领域，查看常见问题与解答';
       }
-      return `${this.currentCategoryName} 相关问题`
-    }
+      return `${this.currentCategoryName} 相关问题`;
+    },
   },
   methods: {
     getQuestionCount(categoryId) {
-      return (this.questionBank[categoryId] || []).length
+      return (this.questionBank[categoryId] || []).length;
     },
     selectCategory(categoryId) {
-      this.selectedCategory = categoryId
+      this.selectedCategory = categoryId;
     },
     openAnswer(question) {
-      this.activeQuestion = question
+      this.activeQuestion = question;
     },
     closeAnswer() {
-      this.activeQuestion = null
+      this.activeQuestion = null;
     },
     handleBack() {
       if (this.selectedCategory) {
-        this.selectedCategory = null
-        this.activeQuestion = null
+        this.selectedCategory = null;
+        this.activeQuestion = null;
       } else {
-        this.$router.push('/tech-sharing')
+        this.$router.push('/tech-sharing');
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -481,9 +478,7 @@ const str = wrap('hello')  // { data: string }`
 .category-card:hover {
   transform: translateY(-8px) scale(1.02);
   border-color: var(--cyber-neon-cyan);
-  box-shadow:
-    var(--cyber-shadow-lg),
-    0 0 30px rgba(0, 217, 255, 0.3);
+  box-shadow: var(--cyber-shadow-lg), 0 0 30px rgba(0, 217, 255, 0.3);
 }
 
 .category-icon {
@@ -698,8 +693,12 @@ const str = wrap('hello')  // { data: string }`
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {

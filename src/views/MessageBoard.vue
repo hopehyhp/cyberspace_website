@@ -19,7 +19,7 @@
               class="cyber-input"
               :value="currentUsername"
               disabled
-              style="opacity: 0.7; cursor: not-allowed;"
+              style="opacity: 0.7; cursor: not-allowed"
             />
             <div class="field-hint">将使用您的注册用户名</div>
           </div>
@@ -34,17 +34,13 @@
               maxlength="500"
             ></textarea>
             <div class="char-count">
-              <span :class="{'warning': newMessage.content.length > 450}">
+              <span :class="{ warning: newMessage.content.length > 450 }">
                 {{ newMessage.content.length }}/500
               </span>
             </div>
           </div>
 
-          <button
-            class="cyber-button"
-            @click="submitMessage"
-            :disabled="!canSubmit"
-          >
+          <button class="cyber-button" @click="submitMessage" :disabled="!canSubmit">
             <span v-if="loading">发送中...</span>
             <span v-else-if="!canSubmit">请填写留言内容</span>
             <span v-else>发送留言</span>
@@ -57,27 +53,19 @@
         <h3 class="form-title neon-cyan">发表留言</h3>
         <div class="login-prompt">
           <p class="prompt-text">您需要登录后才能发表留言</p>
-          <button class="cyber-button" @click="showLoginModal">
-            立即登录
-          </button>
+          <button class="cyber-button" @click="showLoginModal">立即登录</button>
         </div>
       </div>
 
       <div class="messages-section">
         <div class="messages-header">
           <h3 class="messages-title neon-green">留言列表</h3>
-          <div class="message-count">
-            共 {{ messages.length }} 条留言
-          </div>
+          <div class="message-count">共 {{ messages.length }} 条留言</div>
         </div>
 
         <div class="messages-list">
           <transition-group name="message" tag="div">
-            <div
-              v-for="message in messages"
-              :key="message.id"
-              class="cyber-card message-item"
-            >
+            <div v-for="message in messages" :key="message.id" class="cyber-card message-item">
               <div class="message-header">
                 <div class="message-author">
                   <span class="author-icon neon-pink">▶</span>
@@ -97,18 +85,14 @@
                   <button
                     class="like-btn"
                     @click="toggleLike(message.id)"
-                    :class="{ 'liked': message.liked }"
+                    :class="{ liked: message.liked }"
                   >
                     <span class="like-icon">{{ message.liked ? '♥' : '♡' }}</span>
                     <span class="like-count">{{ message.likes }}</span>
                   </button>
                 </div>
                 <div class="footer-right" v-if="isAdmin">
-                  <button
-                    class="delete-btn"
-                    @click="confirmDelete(message.id)"
-                    title="删除留言"
-                  >
+                  <button class="delete-btn" @click="confirmDelete(message.id)" title="删除留言">
                     <span class="delete-icon">🗑</span>
                   </button>
                 </div>
@@ -141,17 +125,17 @@ import AuthModal from '../components/AuthModal.vue';
 export default {
   name: 'MessageBoard',
   components: {
-    AuthModal
+    AuthModal,
   },
   data() {
     return {
       newMessage: {
-        content: ''
+        content: '',
       },
       messages: [],
       loading: false,
-      showAuthModal: false
-    }
+      showAuthModal: false,
+    };
   },
   computed: {
     isAuthenticated() {
@@ -165,10 +149,8 @@ export default {
       return user ? user.username : '';
     },
     canSubmit() {
-      return this.newMessage.content.trim() !== '' &&
-             !this.loading &&
-             this.isAuthenticated;
-    }
+      return this.newMessage.content.trim() !== '' && !this.loading && this.isAuthenticated;
+    },
   },
   mounted() {
     this.loadMessages();
@@ -221,7 +203,7 @@ export default {
       try {
         this.loading = true;
         const response = await messageAPI.submitMessage({
-          content: this.newMessage.content.trim()
+          content: this.newMessage.content.trim(),
         });
 
         // 如果成功返回，response 应该包含 data
@@ -256,7 +238,7 @@ export default {
         this.$router.go(0);
       }, 500);
     },
-    
+
     handleStorageChange(event) {
       // 当localStorage中的user数据变化时，重新加载留言列表（跨标签页同步）
       if (event.key === 'user') {
@@ -329,7 +311,7 @@ export default {
           month: '2-digit',
           day: '2-digit',
           hour: '2-digit',
-          minute: '2-digit'
+          minute: '2-digit',
         });
       }
     },
@@ -345,7 +327,9 @@ export default {
         padding: 16px 28px;
         background: rgba(10, 10, 15, 0.95);
         backdrop-filter: blur(20px);
-        border: 1px solid ${type === 'error' ? 'var(--cyber-neon-pink)' : 'var(--cyber-neon-green)'};
+        border: 1px solid ${
+          type === 'error' ? 'var(--cyber-neon-pink)' : 'var(--cyber-neon-green)'
+        };
         border-radius: 8px;
         z-index: 10000;
         animation: slideInRight 0.3s ease;
@@ -361,9 +345,9 @@ export default {
           }
         }, 300);
       }, 2000);
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -737,4 +721,3 @@ export default {
   }
 }
 </style>
-

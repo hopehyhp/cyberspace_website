@@ -7,9 +7,7 @@
           <span class="text-gradient">欢迎来到</span>
           <span class="neon-cyan neon-glow">赛博空间</span>
         </h1>
-        <p class="hero-subtitle">
-          探索数字世界的无限可能
-        </p>
+        <p class="hero-subtitle">探索数字世界的无限可能</p>
         <div class="daily-section">
           <div class="daily-card cyber-card">
             <div class="daily-date">
@@ -41,36 +39,28 @@
         <div class="feature-icon neon-cyan">📚</div>
         <h3 class="feature-title">技术分享</h3>
         <p class="feature-desc">记录技术心得，分享实用经验</p>
-        <router-link to="/tech-sharing" class="feature-link">
-          前往查看 →
-        </router-link>
+        <router-link to="/tech-sharing" class="feature-link"> 前往查看 → </router-link>
       </div>
 
       <div class="cyber-card feature-card">
         <div class="feature-icon neon-purple">🎮</div>
         <h3 class="feature-title">娱乐游戏</h3>
         <p class="feature-desc">放松心情，享受游戏时光</p>
-        <router-link to="/entertainment" class="feature-link">
-          开始游戏 →
-        </router-link>
+        <router-link to="/entertainment" class="feature-link"> 开始游戏 → </router-link>
       </div>
 
       <div class="cyber-card feature-card">
         <div class="feature-icon neon-pink">✉</div>
         <h3 class="feature-title">留言互动</h3>
         <p class="feature-desc">留下您的足迹，与我交流互动</p>
-        <router-link to="/messages" class="feature-link">
-          前往留言 →
-        </router-link>
+        <router-link to="/messages" class="feature-link"> 前往留言 → </router-link>
       </div>
 
       <div class="cyber-card feature-card">
         <div class="feature-icon neon-cyan">⚡</div>
         <h3 class="feature-title">个人介绍</h3>
         <p class="feature-desc">了解我的技能、经历和理念</p>
-        <router-link to="/about" class="feature-link">
-          查看详情 →
-        </router-link>
+        <router-link to="/about" class="feature-link"> 查看详情 → </router-link>
       </div>
     </div>
   </div>
@@ -81,13 +71,13 @@ export default {
   name: 'HomePage',
   computed: {
     todayDate() {
-      const now = new Date()
-      const year = now.getFullYear()
-      const month = now.getMonth() + 1
-      const day = now.getDate()
-      const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
-      const weekday = weekdays[now.getDay()]
-      return `${year}年${month}月${day}日 ${weekday}`
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth() + 1;
+      const day = now.getDate();
+      const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+      const weekday = weekdays[now.getDay()];
+      return `${year}年${month}月${day}日 ${weekday}`;
     },
     dailyQuote() {
       // 根据日期选择不同的心灵鸡汤，确保每天显示不同的内容
@@ -121,17 +111,19 @@ export default {
         '行动是治愈恐惧的良药，而犹豫、拖延将不断滋养恐惧。',
         '没有比脚更长的路，没有比人更高的山。',
         '相信自己，你能作茧自缚，就能破茧成蝶。',
-        '生活不是林黛玉，不会因为忧伤而风情万种。'
-      ]
+        '生活不是林黛玉，不会因为忧伤而风情万种。',
+      ];
 
       // 使用日期作为种子，确保每天显示不同的鸡汤
-      const today = new Date()
-      const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24)
-      const index = dayOfYear % quotes.length
-      return quotes[index]
-    }
-  }
-}
+      const today = new Date();
+      const dayOfYear = Math.floor(
+        (today - new Date(today.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24
+      );
+      const index = dayOfYear % quotes.length;
+      return quotes[index];
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -228,7 +220,8 @@ export default {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -265,15 +258,33 @@ export default {
   animation: float 3s ease-in-out infinite;
 }
 
-.grid-item:nth-child(1) { animation-delay: 0s; }
-.grid-item:nth-child(2) { animation-delay: 0.2s; }
-.grid-item:nth-child(3) { animation-delay: 0.4s; }
-.grid-item:nth-child(4) { animation-delay: 0.6s; }
-.grid-item:nth-child(5) { animation-delay: 0.8s; }
-.grid-item:nth-child(6) { animation-delay: 1s; }
-.grid-item:nth-child(7) { animation-delay: 1.2s; }
-.grid-item:nth-child(8) { animation-delay: 1.4s; }
-.grid-item:nth-child(9) { animation-delay: 1.6s; }
+.grid-item:nth-child(1) {
+  animation-delay: 0s;
+}
+.grid-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.grid-item:nth-child(3) {
+  animation-delay: 0.4s;
+}
+.grid-item:nth-child(4) {
+  animation-delay: 0.6s;
+}
+.grid-item:nth-child(5) {
+  animation-delay: 0.8s;
+}
+.grid-item:nth-child(6) {
+  animation-delay: 1s;
+}
+.grid-item:nth-child(7) {
+  animation-delay: 1.2s;
+}
+.grid-item:nth-child(8) {
+  animation-delay: 1.4s;
+}
+.grid-item:nth-child(9) {
+  animation-delay: 1.6s;
+}
 
 .grid-item::before {
   content: '';
@@ -282,17 +293,13 @@ export default {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(0, 217, 255, 0.1),
-    transparent
-  );
+  background: linear-gradient(45deg, transparent, rgba(0, 217, 255, 0.1), transparent);
   animation: rotate 4s linear infinite;
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -424,4 +431,3 @@ export default {
   }
 }
 </style>
-

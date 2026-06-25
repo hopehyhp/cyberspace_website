@@ -12,10 +12,10 @@ const corsOptions = {
   origin: function (origin, callback) {
     // 允许的源列表
     const allowedOrigins = [
-      'http://47.236.237.30',
-      'http://47.236.237.30:80',
-      'http://47.236.237.30:443',
-      'https://47.236.237.30',
+      'http://82.156.227.230',
+      'http://82.156.227.230:80',
+      'http://82.156.227.230:443',
+      'https://82.156.227.230',
       'http://hopehu.xyz',
       'https://hopehu.xyz',
       'http://www.hopehu.xyz',
@@ -25,17 +25,17 @@ const corsOptions = {
       'http://127.0.0.1:8080',
       'http://0.0.0.0:3000'
     ];
-    
+
     // 如果没有origin（比如Postman、curl或移动应用），允许通过
     if (!origin) {
       return callback(null, true);
     }
-    
+
     // 开发环境：允许所有源
     if (process.env.NODE_ENV === 'development') {
       return callback(null, true);
     }
-    
+
     // 生产环境：检查是否在允许列表中
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);

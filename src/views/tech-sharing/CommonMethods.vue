@@ -24,10 +24,10 @@ export default {
   name: 'CommonMethodsPage',
   methods: {
     goBack() {
-      this.$router.push('/tech-sharing')
-    }
-  }
-}
+      this.$router.push('/tech-sharing');
+    },
+  },
+};
 </script>
 
 <style scoped>

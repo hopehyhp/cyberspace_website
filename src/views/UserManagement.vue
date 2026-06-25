@@ -13,13 +13,8 @@
         <div class="users-header">
           <h3 class="users-title neon-green">用户列表</h3>
           <div class="users-header-right">
-            <div class="user-count">
-              共 {{ users.length }} 个用户
-            </div>
-            <button
-              class="cyber-button add-user-btn"
-              @click="openAddUserModal"
-            >
+            <div class="user-count">共 {{ users.length }} 个用户</div>
+            <button class="cyber-button add-user-btn" @click="openAddUserModal">
               <span class="btn-icon">+</span>
               新增用户
             </button>
@@ -58,18 +53,10 @@
                 </td>
                 <td>{{ formatDate(user.created_at) }}</td>
                 <td class="actions-cell">
-                  <button
-                    class="action-btn edit-btn"
-                    @click="editUser(user)"
-                    title="编辑"
-                  >
+                  <button class="action-btn edit-btn" @click="editUser(user)" title="编辑">
                     编辑
                   </button>
-                  <button
-                    class="action-btn delete-btn"
-                    @click="confirmDelete(user)"
-                    title="删除"
-                  >
+                  <button class="action-btn delete-btn" @click="confirmDelete(user)" title="删除">
                     删除
                   </button>
                 </td>
@@ -92,9 +79,7 @@
           <h3 class="modal-title neon-cyan">
             {{ editingUser ? '编辑用户' : '添加新用户' }}
           </h3>
-          <button class="modal-close-btn" @click="closeModal" title="关闭">
-            ×
-          </button>
+          <button class="modal-close-btn" @click="closeModal" title="关闭">×</button>
         </div>
         <div class="modal-body">
           <div class="user-form">
@@ -119,11 +104,17 @@
                   type="password"
                   class="cyber-input"
                   v-model="userForm.password"
-                  :placeholder="editingUser ? '输入新密码以修改（留空则不修改，至少6位）...' : '输入密码（至少6位）...'"
+                  :placeholder="
+                    editingUser
+                      ? '输入新密码以修改（留空则不修改，至少6位）...'
+                      : '输入密码（至少6位）...'
+                  "
                   minlength="6"
                 />
                 <div v-if="editingUser" class="password-hint">
-                  <span class="hint-text">提示：密码以加密形式存储，无法查看原密码。输入新密码即可修改。</span>
+                  <span class="hint-text"
+                    >提示：密码以加密形式存储，无法查看原密码。输入新密码即可修改。</span
+                  >
                 </div>
               </div>
             </div>
@@ -171,21 +162,12 @@
             </div>
 
             <div class="form-actions">
-              <button
-                class="cyber-button"
-                @click="submitUser"
-                :disabled="!canSubmit"
-              >
+              <button class="cyber-button" @click="submitUser" :disabled="!canSubmit">
                 <span v-if="loading">{{ editingUser ? '更新中...' : '创建中...' }}</span>
                 <span v-else-if="!canSubmit">{{ getSubmitButtonText() }}</span>
                 <span v-else>{{ editingUser ? '更新用户' : '创建用户' }}</span>
               </button>
-              <button
-                class="cyber-button cancel-button"
-                @click="closeModal"
-              >
-                取消
-              </button>
+              <button class="cyber-button cancel-button" @click="closeModal">取消</button>
             </div>
           </div>
         </div>
@@ -211,8 +193,8 @@ export default {
         email: '',
         phone: '',
         status: 'active',
-        role: 'user'
-      }
+        role: 'user',
+      },
     };
   },
   computed: {
@@ -223,11 +205,13 @@ export default {
         return this.userForm.username.trim() !== '' && passwordValid && !this.loading;
       } else {
         // 创建时，需要用户名和密码
-        return this.userForm.username.trim() !== '' && 
-               this.userForm.password.length >= 6 && 
-               !this.loading;
+        return (
+          this.userForm.username.trim() !== '' &&
+          this.userForm.password.length >= 6 &&
+          !this.loading
+        );
       }
-    }
+    },
   },
   mounted() {
     // 检查管理员权限
@@ -275,7 +259,9 @@ export default {
         }
 
         if (response.success) {
-          this.showNotification(response.message || (this.editingUser ? '用户更新成功！' : '用户创建成功！'));
+          this.showNotification(
+            response.message || (this.editingUser ? '用户更新成功！' : '用户创建成功！')
+          );
           this.closeModal();
           this.loadUsers();
         }
@@ -300,7 +286,7 @@ export default {
         email: user.email || '',
         phone: user.phone || '',
         status: user.status,
-        role: user.role
+        role: user.role,
       };
       this.showModal = true;
     },
@@ -320,7 +306,11 @@ export default {
         return '请填写用户名';
       }
       if (this.editingUser) {
-        if (this.userForm.password && this.userForm.password.length > 0 && this.userForm.password.length < 6) {
+        if (
+          this.userForm.password &&
+          this.userForm.password.length > 0 &&
+          this.userForm.password.length < 6
+        ) {
           return '密码至少6位';
         }
       } else {
@@ -339,7 +329,7 @@ export default {
         email: '',
         phone: '',
         status: 'active',
-        role: 'user'
+        role: 'user',
       };
     },
 
@@ -370,7 +360,7 @@ export default {
       const classes = {
         active: 'status-badge status-active',
         inactive: 'status-badge status-inactive',
-        banned: 'status-badge status-banned'
+        banned: 'status-badge status-banned',
       };
       return classes[status] || 'status-badge';
     },
@@ -379,7 +369,7 @@ export default {
       const texts = {
         active: '活跃',
         inactive: '非活跃',
-        banned: '已禁用'
+        banned: '已禁用',
       };
       return texts[status] || status;
     },
@@ -388,7 +378,7 @@ export default {
       const classes = {
         user: 'role-badge role-user',
         admin: 'role-badge role-admin',
-        moderator: 'role-badge role-moderator'
+        moderator: 'role-badge role-moderator',
       };
       return classes[role] || 'role-badge';
     },
@@ -397,7 +387,7 @@ export default {
       const texts = {
         user: '用户',
         admin: '管理员',
-        moderator: '版主'
+        moderator: '版主',
       };
       return texts[role] || role;
     },
@@ -410,7 +400,7 @@ export default {
         month: '2-digit',
         day: '2-digit',
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
       });
     },
 
@@ -425,7 +415,9 @@ export default {
         padding: 16px 28px;
         background: rgba(10, 10, 15, 0.95);
         backdrop-filter: blur(20px);
-        border: 1px solid ${type === 'error' ? 'var(--cyber-neon-pink)' : 'var(--cyber-neon-green)'};
+        border: 1px solid ${
+          type === 'error' ? 'var(--cyber-neon-pink)' : 'var(--cyber-neon-green)'
+        };
         border-radius: 8px;
         z-index: 10000;
         animation: slideInRight 0.3s ease;
@@ -441,8 +433,8 @@ export default {
           }
         }, 300);
       }, 2000);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -941,4 +933,3 @@ export default {
   }
 }
 </style>
-

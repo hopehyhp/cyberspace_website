@@ -9,7 +9,7 @@
         <span class="neon-purple neon-glow">猜数字</span>
       </h1>
     </div>
-    
+
     <div class="game-container">
       <div class="cyber-card game-card">
         <div class="game-info">
@@ -19,12 +19,12 @@
           </div>
           <div class="info-item">
             <span class="info-label">剩余次数:</span>
-            <span 
+            <span
               class="info-value"
               :class="{
                 'neon-green': attemptsLeft > 5,
                 'neon-yellow': attemptsLeft > 2 && attemptsLeft <= 5,
-                'neon-pink': attemptsLeft <= 2
+                'neon-pink': attemptsLeft <= 2,
               }"
             >
               {{ attemptsLeft }}
@@ -32,12 +32,12 @@
           </div>
           <div class="info-item">
             <span class="info-label">游戏状态:</span>
-            <span 
+            <span
               class="info-value"
               :class="{
                 'neon-green': gameStatus === 'playing',
                 'neon-yellow': gameStatus === 'won',
-                'neon-pink': gameStatus === 'lost'
+                'neon-pink': gameStatus === 'lost',
               }"
             >
               {{ statusMessage }}
@@ -52,7 +52,7 @@
                 {{ lastHint }}
               </div>
             </div>
-            
+
             <div class="guess-input-wrapper">
               <input
                 v-model.number="currentGuess"
@@ -64,7 +64,7 @@
                 @keyup.enter="makeGuess"
                 :disabled="gameStatus !== 'playing'"
               />
-              <button 
+              <button
                 class="guess-button"
                 @click="makeGuess"
                 :disabled="gameStatus !== 'playing' || !currentGuess"
@@ -90,8 +90,8 @@
           <div class="history-section">
             <div class="history-title">猜测历史</div>
             <div class="history-list">
-              <div 
-                v-for="(record, index) in guessHistory" 
+              <div
+                v-for="(record, index) in guessHistory"
                 :key="index"
                 class="history-item"
                 :class="record.hintClass"
@@ -99,28 +99,20 @@
                 <span class="history-guess">{{ record.guess }}</span>
                 <span class="history-hint">{{ record.hint }}</span>
               </div>
-              <div v-if="guessHistory.length === 0" class="history-empty">
-                还没有猜测记录
-              </div>
+              <div v-if="guessHistory.length === 0" class="history-empty">还没有猜测记录</div>
             </div>
           </div>
         </div>
 
         <div class="game-actions">
-          <button 
+          <button
             v-if="gameStatus !== 'playing'"
             class="action-button neon-green"
             @click="startNewGame"
           >
             开始新游戏
           </button>
-          <button 
-            v-else
-            class="action-button neon-yellow"
-            @click="restartGame"
-          >
-            重新开始
-          </button>
+          <button v-else class="action-button neon-yellow" @click="restartGame">重新开始</button>
         </div>
       </div>
     </div>
@@ -140,113 +132,113 @@ export default {
       gameStatus: 'playing', // playing, won, lost
       guessHistory: [],
       lastHint: '',
-      hintClass: ''
-    }
+      hintClass: '',
+    };
   },
   computed: {
     statusMessage() {
       switch (this.gameStatus) {
         case 'playing':
-          return '游戏中'
+          return '游戏中';
         case 'won':
-          return '恭喜获胜！'
+          return '恭喜获胜！';
         case 'lost':
-          return '游戏结束'
+          return '游戏结束';
         default:
-          return '准备中'
+          return '准备中';
       }
     },
     resultMessage() {
       if (this.gameStatus === 'won') {
-        return '太棒了！你猜对了！'
+        return '太棒了！你猜对了！';
       } else if (this.gameStatus === 'lost') {
-        return '很遗憾，机会用完了'
+        return '很遗憾，机会用完了';
       }
-      return ''
+      return '';
     },
     resultIcon() {
       if (this.gameStatus === 'won') {
-        return '🎉'
+        return '🎉';
       } else if (this.gameStatus === 'lost') {
-        return '😢'
+        return '😢';
       }
-      return ''
+      return '';
     },
     resultClass() {
       if (this.gameStatus === 'won') {
-        return 'neon-green'
+        return 'neon-green';
       } else if (this.gameStatus === 'lost') {
-        return 'neon-pink'
+        return 'neon-pink';
       }
-      return ''
-    }
+      return '';
+    },
   },
   mounted() {
-    this.startNewGame()
+    this.startNewGame();
   },
   methods: {
     startNewGame() {
-      this.targetNumber = Math.floor(Math.random() * this.maxNumber) + 1
-      this.currentGuess = null
-      this.attemptsLeft = this.maxAttempts
-      this.gameStatus = 'playing'
-      this.guessHistory = []
-      this.lastHint = ''
-      this.hintClass = ''
+      this.targetNumber = Math.floor(Math.random() * this.maxNumber) + 1;
+      this.currentGuess = null;
+      this.attemptsLeft = this.maxAttempts;
+      this.gameStatus = 'playing';
+      this.guessHistory = [];
+      this.lastHint = '';
+      this.hintClass = '';
     },
     restartGame() {
       if (confirm('确定要重新开始游戏吗？当前进度将丢失。')) {
-        this.startNewGame()
+        this.startNewGame();
       }
     },
     makeGuess() {
       if (!this.currentGuess || this.gameStatus !== 'playing') {
-        return
+        return;
       }
 
-      const guess = parseInt(this.currentGuess)
-      
+      const guess = parseInt(this.currentGuess);
+
       if (isNaN(guess) || guess < 1 || guess > this.maxNumber) {
-        alert(`请输入 1 到 ${this.maxNumber} 之间的数字！`)
-        return
+        alert(`请输入 1 到 ${this.maxNumber} 之间的数字！`);
+        return;
       }
 
-      this.attemptsLeft--
-      let hint = ''
-      let hintClass = ''
+      this.attemptsLeft--;
+      let hint = '';
+      let hintClass = '';
 
       if (guess === this.targetNumber) {
-        this.gameStatus = 'won'
-        hint = '🎯 完全正确！'
-        hintClass = 'neon-green'
+        this.gameStatus = 'won';
+        hint = '🎯 完全正确！';
+        hintClass = 'neon-green';
       } else if (guess < this.targetNumber) {
-        hint = `📈 太小了，再大一点！`
-        hintClass = 'neon-cyan'
+        hint = `📈 太小了，再大一点！`;
+        hintClass = 'neon-cyan';
       } else {
-        hint = `📉 太大了，再小一点！`
-        hintClass = 'neon-pink'
+        hint = `📉 太大了，再小一点！`;
+        hintClass = 'neon-pink';
       }
 
-      this.lastHint = hint
-      this.hintClass = hintClass
+      this.lastHint = hint;
+      this.hintClass = hintClass;
 
       this.guessHistory.unshift({
         guess: guess,
         hint: hint,
-        hintClass: hintClass
-      })
+        hintClass: hintClass,
+      });
 
       if (this.attemptsLeft === 0 && this.gameStatus === 'playing') {
-        this.gameStatus = 'lost'
+        this.gameStatus = 'lost';
       }
 
-      this.currentGuess = null
+      this.currentGuess = null;
     },
     goBack() {
-      this.$router.push('/entertainment')
-    }
-  }
-}
+      this.$router.push('/entertainment');
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -569,7 +561,8 @@ export default {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -600,16 +593,16 @@ export default {
     transform: none;
     margin-bottom: 20px;
   }
-  
+
   .back-button:hover {
     transform: translateX(-3px);
   }
-  
+
   .game-header {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .game-title {
     width: 100%;
     margin-top: 20px;
@@ -641,4 +634,3 @@ export default {
   }
 }
 </style>
-

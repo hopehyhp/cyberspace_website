@@ -6,49 +6,37 @@
       </h1>
       <p class="page-subtitle">放松心情，享受游戏时光</p>
     </div>
-    
+
     <div class="games-section">
       <div class="games-grid">
-        <div 
-          class="cyber-card game-card"
-          @click="navigateToGame('gomoku3x3')"
-        >
+        <div class="cyber-card game-card" @click="navigateToGame('gomoku3x3')">
           <div class="game-icon neon-cyan">⚫</div>
           <h3 class="game-title">3x3 五子棋</h3>
           <p class="game-desc">经典五子棋的迷你版本，在3x3的棋盘上挑战你的策略思维</p>
           <div class="game-badge neon-green">NEW</div>
         </div>
-        
-        <div 
-          class="cyber-card game-card"
-          @click="navigateToGame('guess-number')"
-        >
+
+        <div class="cyber-card game-card" @click="navigateToGame('guess-number')">
           <div class="game-icon neon-purple">🔢</div>
           <h3 class="game-title">猜数字</h3>
           <p class="game-desc">在1-100之间猜一个数字，考验你的逻辑推理能力</p>
           <div class="game-badge neon-green">NEW</div>
         </div>
-        
-        <div 
-          class="cyber-card game-card"
-          @click="navigateToGame('tetris')"
-        >
+
+        <div class="cyber-card game-card" @click="navigateToGame('tetris')">
           <div class="game-icon neon-cyan">🧩</div>
           <h3 class="game-title">俄罗斯方块</h3>
           <p class="game-desc">经典消除游戏，挑战你的反应速度和策略思维</p>
           <div class="game-badge neon-green">NEW</div>
         </div>
-        
-        <div 
-          class="cyber-card game-card"
-          @click="navigateToGame('guess-idiom')"
-        >
+
+        <div class="cyber-card game-card" @click="navigateToGame('guess-idiom')">
           <div class="game-icon neon-purple">📝</div>
           <h3 class="game-title">猜成语</h3>
           <p class="game-desc">通过拼音和颜色提示，猜出4字成语，考验你的中文水平</p>
           <div class="game-badge neon-green">NEW</div>
         </div>
-        
+
         <!-- 预留更多游戏位置 -->
         <div class="cyber-card game-card coming-soon">
           <div class="game-icon neon-purple">🎮</div>
@@ -65,10 +53,10 @@ export default {
   name: 'EntertainmentPage',
   methods: {
     navigateToGame(gameName) {
-      this.$router.push(`/entertainment/${gameName}`)
-    }
-  }
-}
+      this.$router.push(`/entertainment/${gameName}`);
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -131,9 +119,7 @@ export default {
 .game-card:not(.coming-soon):hover {
   transform: translateY(-8px) scale(1.02);
   border-color: var(--cyber-neon-cyan);
-  box-shadow: 
-    var(--cyber-shadow-lg),
-    0 0 30px rgba(0, 217, 255, 0.3),
+  box-shadow: var(--cyber-shadow-lg), 0 0 30px rgba(0, 217, 255, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   cursor: pointer !important;
 }
@@ -213,14 +199,13 @@ export default {
   .entertainment-page {
     padding: 20px 16px 40px;
   }
-  
+
   .page-title {
     font-size: 2.5em;
   }
-  
+
   .games-grid {
     grid-template-columns: 1fr;
   }
 }
 </style>
-

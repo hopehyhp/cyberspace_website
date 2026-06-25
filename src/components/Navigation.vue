@@ -8,62 +8,37 @@
         </router-link>
       </div>
 
-      <div class="nav-menu" :class="{ 'active': menuOpen }">
-        <router-link
-            to="/"
-            class="nav-link"
-            exact-active-class="active"
-            @click="closeMenu"
-        >
+      <div class="nav-menu" :class="{ active: menuOpen }">
+        <router-link to="/" class="nav-link" exact-active-class="active" @click="closeMenu">
           <span class="nav-icon">⌂</span>
           <span class="nav-text">首页</span>
         </router-link>
 
-        <router-link
-            to="/tech-sharing"
-            class="nav-link"
-            active-class="active"
-            @click="closeMenu"
-        >
+        <router-link to="/tech-sharing" class="nav-link" active-class="active" @click="closeMenu">
           <span class="nav-icon">📚</span>
           <span class="nav-text">技术分享</span>
         </router-link>
 
-        <router-link
-            to="/entertainment"
-            class="nav-link"
-            active-class="active"
-            @click="closeMenu"
-        >
+        <router-link to="/entertainment" class="nav-link" active-class="active" @click="closeMenu">
           <span class="nav-icon">🎮</span>
           <span class="nav-text">娱乐</span>
         </router-link>
-        <router-link
-            to="/messages"
-            class="nav-link"
-            active-class="active"
-            @click="closeMenu"
-        >
+        <router-link to="/messages" class="nav-link" active-class="active" @click="closeMenu">
           <span class="nav-icon">✉</span>
           <span class="nav-text">留言</span>
         </router-link>
 
-        <router-link
-            to="/about"
-            class="nav-link"
-            active-class="active"
-            @click="closeMenu"
-        >
+        <router-link to="/about" class="nav-link" active-class="active" @click="closeMenu">
           <span class="nav-icon">⚡</span>
           <span class="nav-text">关于</span>
         </router-link>
 
         <router-link
-            v-if="isAdmin"
-            to="/users"
-            class="nav-link"
-            active-class="active"
-            @click="closeMenu"
+          v-if="isAdmin"
+          to="/users"
+          class="nav-link"
+          active-class="active"
+          @click="closeMenu"
         >
           <span class="nav-icon">👥</span>
           <span class="nav-text">用户管理</span>
@@ -73,16 +48,16 @@
       <div class="nav-right">
         <div class="user-menu-container" v-click-outside="closeUserMenu">
           <button
-              class="user-avatar-btn"
-              @click="toggleUserMenu"
-              :title="currentUser ? currentUser.username : '未登录'"
+            class="user-avatar-btn"
+            @click="toggleUserMenu"
+            :title="currentUser ? currentUser.username : '未登录'"
           >
             <div class="user-avatar">
               {{ currentUser ? currentUser.username.charAt(0).toUpperCase() : '?' }}
             </div>
           </button>
 
-          <div class="user-menu" :class="{ 'active': userMenuOpen }">
+          <div class="user-menu" :class="{ active: userMenuOpen }">
             <div v-if="currentUser" class="user-info">
               <div class="user-name">{{ currentUser.username }}</div>
               <div class="user-role">{{ getRoleText(currentUser.role) }}</div>
@@ -91,59 +66,45 @@
               <div class="user-name">未登录</div>
             </div>
             <div class="user-menu-divider"></div>
-            <button
-                v-if="!currentUser"
-                class="user-menu-item"
-                @click="openAuthModal('login')"
-            >
+            <button v-if="!currentUser" class="user-menu-item" @click="openAuthModal('login')">
               登录
             </button>
-            <button
-                v-if="!currentUser"
-                class="user-menu-item"
-                @click="openAuthModal('register')"
-            >
+            <button v-if="!currentUser" class="user-menu-item" @click="openAuthModal('register')">
               注册
             </button>
-            <button
-                v-if="currentUser"
-                class="user-menu-item"
-                @click="logout"
-            >
-              退出登录
-            </button>
+            <button v-if="currentUser" class="user-menu-item" @click="logout">退出登录</button>
           </div>
         </div>
 
         <button
-            class="nav-toggle"
-            @click="toggleMenu"
-            :aria-label="menuOpen ? '关闭菜单' : '打开菜单'"
+          class="nav-toggle"
+          @click="toggleMenu"
+          :aria-label="menuOpen ? '关闭菜单' : '打开菜单'"
         >
-          <span class="toggle-line" :class="{ 'active': menuOpen }"></span>
-          <span class="toggle-line" :class="{ 'active': menuOpen }"></span>
-          <span class="toggle-line" :class="{ 'active': menuOpen }"></span>
+          <span class="toggle-line" :class="{ active: menuOpen }"></span>
+          <span class="toggle-line" :class="{ active: menuOpen }"></span>
+          <span class="toggle-line" :class="{ active: menuOpen }"></span>
         </button>
       </div>
     </div>
 
     <AuthModal
-        :visible="authModalVisible"
-        :default-mode="authModalMode"
-        @close="closeAuthModal"
-        @login-success="handleLoginSuccess"
+      :visible="authModalVisible"
+      :default-mode="authModalMode"
+      @close="closeAuthModal"
+      @login-success="handleLoginSuccess"
     />
   </nav>
 </template>
 
 <script>
-import {authUtils} from '../utils/api';
+import { authUtils } from '../utils/api';
 import AuthModal from './AuthModal.vue';
 
 export default {
   name: 'NavigationMenu',
   components: {
-    AuthModal
+    AuthModal,
   },
   data() {
     return {
@@ -152,8 +113,8 @@ export default {
       authModalVisible: false,
       authModalMode: 'login',
       currentUser: null,
-      userRole: null // 添加响应式的用户角色属性
-    }
+      userRole: null, // 添加响应式的用户角色属性
+    };
   },
   computed: {
     isAdmin() {
@@ -162,7 +123,7 @@ export default {
         return this.userRole === 'admin';
       }
       return authUtils.isAdmin();
-    }
+    },
   },
   mounted() {
     this.loadUser();
@@ -175,16 +136,16 @@ export default {
   },
   methods: {
     toggleMenu() {
-      this.menuOpen = !this.menuOpen
+      this.menuOpen = !this.menuOpen;
     },
     closeMenu() {
-      this.menuOpen = false
+      this.menuOpen = false;
     },
     toggleUserMenu() {
-      this.userMenuOpen = !this.userMenuOpen
+      this.userMenuOpen = !this.userMenuOpen;
     },
     closeUserMenu() {
-      this.userMenuOpen = false
+      this.userMenuOpen = false;
     },
     openAuthModal(mode = 'login') {
       this.authModalMode = mode;
@@ -250,7 +211,7 @@ export default {
       const texts = {
         user: '普通用户',
         admin: '管理员',
-        moderator: '版主'
+        moderator: '版主',
       };
       return texts[role] || role;
     },
@@ -265,7 +226,9 @@ export default {
         padding: 16px 28px;
         background: rgba(10, 10, 15, 0.95);
         backdrop-filter: blur(20px);
-        border: 1px solid ${type === 'error' ? 'var(--cyber-neon-pink)' : 'var(--cyber-neon-green)'};
+        border: 1px solid ${
+          type === 'error' ? 'var(--cyber-neon-pink)' : 'var(--cyber-neon-green)'
+        };
         border-radius: 8px;
         z-index: 10001;
         animation: slideInRight 0.3s ease;
@@ -281,13 +244,13 @@ export default {
           }
         }, 300);
       }, 2000);
-    }
+    },
   },
   watch: {
     $route() {
-      this.closeMenu()
-      this.closeUserMenu()
-    }
+      this.closeMenu();
+      this.closeUserMenu();
+    },
   },
   directives: {
     'click-outside': {
@@ -301,10 +264,10 @@ export default {
       },
       unbind(el) {
         document.body.removeEventListener('click', el.clickOutsideEvent);
-      }
-    }
-  }
-}
+      },
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -356,7 +319,8 @@ export default {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -365,8 +329,7 @@ export default {
 }
 
 .brand-link:hover .brand-text {
-  text-shadow: 0 0 8px var(--cyber-neon-cyan),
-  0 0 16px var(--cyber-neon-cyan);
+  text-shadow: 0 0 8px var(--cyber-neon-cyan), 0 0 16px var(--cyber-neon-cyan);
 }
 
 .nav-menu {
@@ -668,4 +631,3 @@ export default {
   }
 }
 </style>
-

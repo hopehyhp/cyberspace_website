@@ -7,12 +7,12 @@ const getBaseURL = () => {
   if (process.env.VUE_APP_API_BASE_URL) {
     return process.env.VUE_APP_API_BASE_URL;
   }
-  
+
   // 生产环境使用相对路径（通过 Nginx 反向代理）
   if (process.env.NODE_ENV === 'production') {
     return '/api';
   }
-  
+
   // 开发环境使用 localhost
   return 'http://localhost:3000/api';
 };
@@ -22,8 +22,8 @@ const api = axios.create({
   baseURL: getBaseURL(),
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 });
 
 // 请求拦截器
@@ -102,7 +102,7 @@ export const messageAPI = {
       return Promise.reject(new Error('您没有权限删除留言'));
     }
     return api.delete(`/messages/${messageId}`);
-  }
+  },
 };
 
 // 用户管理 API
@@ -130,7 +130,7 @@ export const userAPI = {
   // 删除用户
   deleteUser(userId) {
     return api.delete(`/users/${userId}`);
-  }
+  },
 };
 
 // 认证 API
@@ -148,7 +148,7 @@ export const authAPI = {
   // 获取当前用户信息
   getCurrentUser() {
     return api.get('/auth/me');
-  }
+  },
 };
 
 // 用户状态管理工具
@@ -178,8 +178,7 @@ export const authUtils = {
   isAdmin() {
     const user = this.getUser();
     return user && user.role === 'admin';
-  }
+  },
 };
 
 export default api;
-

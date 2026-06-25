@@ -9,16 +9,13 @@
         <span class="neon-cyan neon-glow">3x3 五子棋</span>
       </h1>
     </div>
-    
+
     <div class="game-container">
       <div class="cyber-card game-board-card">
         <div class="game-info">
           <div class="current-player">
             <span class="info-label">当前玩家:</span>
-            <span 
-              class="player-name"
-              :class="currentPlayer === 'X' ? 'neon-cyan' : 'neon-pink'"
-            >
+            <span class="player-name" :class="currentPlayer === 'X' ? 'neon-cyan' : 'neon-pink'">
               {{ currentPlayer === 'X' ? '玩家 X' : '玩家 O' }}
             </span>
           </div>
@@ -32,19 +29,19 @@
             </span>
           </div>
           <div class="game-status">
-            <span 
+            <span
               class="status-text"
               :class="{
                 'neon-green': gameStatus === 'playing',
                 'neon-yellow': gameStatus === 'draw',
-                'neon-pink': gameStatus === 'win'
+                'neon-pink': gameStatus === 'win',
               }"
             >
               {{ statusMessage }}
             </span>
           </div>
         </div>
-        
+
         <div class="board-container">
           <div class="game-board">
             <div
@@ -54,7 +51,7 @@
               :class="{
                 'cell-x': cell === 'X',
                 'cell-o': cell === 'O',
-                'cell-winner': winningCells.includes(index)
+                'cell-winner': winningCells.includes(index),
               }"
               @click="makeMove(index)"
             >
@@ -63,9 +60,9 @@
             </div>
           </div>
         </div>
-        
+
         <div class="game-controls">
-          <button 
+          <button
             class="cyber-button reset-button"
             @click="resetGame"
             :disabled="gameStatus === 'playing' && movesCount === 0"
@@ -74,7 +71,7 @@
           </button>
         </div>
       </div>
-      
+
       <div class="cyber-card game-rules-card">
         <h3 class="rules-title neon-purple">游戏规则</h3>
         <ul class="rules-list">
@@ -101,73 +98,73 @@ export default {
       movesCount: 0,
       // 追踪每个玩家棋子落子顺序（最早的在索引0）
       playerXMoves: [],
-      playerOMoves: []
-    }
+      playerOMoves: [],
+    };
   },
   computed: {
     statusMessage() {
       if (this.gameStatus === 'win') {
-        return `${this.currentPlayer === 'X' ? '玩家 O' : '玩家 X'} 获胜！`
+        return `${this.currentPlayer === 'X' ? '玩家 O' : '玩家 X'} 获胜！`;
       } else if (this.gameStatus === 'draw') {
-        return '平局！'
+        return '平局！';
       } else {
-        return '游戏进行中...'
+        return '游戏进行中...';
       }
     },
     playerXPieceCount() {
-      return this.playerXMoves.length
+      return this.playerXMoves.length;
     },
     playerOPieceCount() {
-      return this.playerOMoves.length
-    }
+      return this.playerOMoves.length;
+    },
   },
   methods: {
     makeMove(index) {
       // 如果游戏已结束，不允许下棋
       if (this.gameStatus !== 'playing') {
-        return
+        return;
       }
-      
-      const playerMoves = this.currentPlayer === 'X' ? this.playerXMoves : this.playerOMoves
-      
+
+      const playerMoves = this.currentPlayer === 'X' ? this.playerXMoves : this.playerOMoves;
+
       // 判断是否在替换自己最早的那颗棋子（放在同一位置）
-      const isReplacingOwn = playerMoves.length >= 3 && playerMoves[0] === index
-      
+      const isReplacingOwn = playerMoves.length >= 3 && playerMoves[0] === index;
+
       // 目标位置被对手棋子占据，不允许下棋
       if (this.board[index] && !isReplacingOwn) {
-        return
+        return;
       }
-      
+
       // 如果该玩家场上已有3颗棋子，且不是放在同一位置，先移除最早的那一颗
       if (playerMoves.length >= 3 && !isReplacingOwn) {
-        const oldestIndex = playerMoves.shift()
-        this.$set(this.board, oldestIndex, null)
+        const oldestIndex = playerMoves.shift();
+        this.$set(this.board, oldestIndex, null);
       }
-      
+
       // 下棋
-      this.$set(this.board, index, this.currentPlayer)
-      
+      this.$set(this.board, index, this.currentPlayer);
+
       // 更新落子顺序记录
       if (isReplacingOwn) {
         // 替换同一位置：移除最早的记录，将新记录加到末尾
-        playerMoves.shift()
-        playerMoves.push(index)
+        playerMoves.shift();
+        playerMoves.push(index);
       } else {
-        playerMoves.push(index)
+        playerMoves.push(index);
       }
-      this.movesCount++
-      
+      this.movesCount++;
+
       // 检查是否获胜
       if (this.checkWin()) {
-        this.gameStatus = 'win'
-        this.showNotification(`${this.currentPlayer === 'X' ? '玩家 X' : '玩家 O'} 获胜！`)
-        return
+        this.gameStatus = 'win';
+        this.showNotification(`${this.currentPlayer === 'X' ? '玩家 X' : '玩家 O'} 获胜！`);
+        return;
       }
-      
+
       // 切换玩家
-      this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X'
+      this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
     },
-    
+
     checkWin() {
       const winPatterns = [
         [0, 1, 2], // 第一行
@@ -177,42 +174,38 @@ export default {
         [1, 4, 7], // 第二列
         [2, 5, 8], // 第三列
         [0, 4, 8], // 主对角线
-        [2, 4, 6]  // 副对角线
-      ]
-      
+        [2, 4, 6], // 副对角线
+      ];
+
       for (const pattern of winPatterns) {
-        const [a, b, c] = pattern
-        if (
-          this.board[a] &&
-          this.board[a] === this.board[b] &&
-          this.board[a] === this.board[c]
-        ) {
-          this.winningCells = pattern
-          return true
+        const [a, b, c] = pattern;
+        if (this.board[a] && this.board[a] === this.board[b] && this.board[a] === this.board[c]) {
+          this.winningCells = pattern;
+          return true;
         }
       }
-      
-      return false
+
+      return false;
     },
-    
+
     resetGame() {
-      this.board = Array(9).fill(null)
-      this.currentPlayer = 'X'
-      this.gameStatus = 'playing'
-      this.winningCells = []
-      this.movesCount = 0
-      this.playerXMoves = []
-      this.playerOMoves = []
+      this.board = Array(9).fill(null);
+      this.currentPlayer = 'X';
+      this.gameStatus = 'playing';
+      this.winningCells = [];
+      this.movesCount = 0;
+      this.playerXMoves = [];
+      this.playerOMoves = [];
     },
-    
+
     goBack() {
-      this.$router.push('/entertainment')
+      this.$router.push('/entertainment');
     },
-    
+
     showNotification(text) {
-      const notification = document.createElement('div')
-      notification.className = 'game-notification'
-      notification.textContent = text
+      const notification = document.createElement('div');
+      notification.className = 'game-notification';
+      notification.textContent = text;
       notification.style.cssText = `
         position: fixed;
         top: 50%;
@@ -230,20 +223,20 @@ export default {
         text-shadow: 0 0 10px var(--cyber-neon-cyan);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 217, 255, 0.3);
         animation: notificationPop 0.4s ease-out;
-      `
-      document.body.appendChild(notification)
-      
+      `;
+      document.body.appendChild(notification);
+
       setTimeout(() => {
-        notification.style.animation = 'notificationFadeOut 0.3s ease-out'
+        notification.style.animation = 'notificationFadeOut 0.3s ease-out';
         setTimeout(() => {
           if (document.body.contains(notification)) {
-            document.body.removeChild(notification)
+            document.body.removeChild(notification);
           }
-        }, 300)
-      }, 2000)
-    }
-  }
-}
+        }, 300);
+      }, 2000);
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -441,9 +434,7 @@ export default {
   font-size: 4em;
   color: var(--cyber-neon-cyan);
   font-weight: 300;
-  text-shadow: 
-    0 0 10px var(--cyber-neon-cyan),
-    0 0 20px var(--cyber-neon-cyan);
+  text-shadow: 0 0 10px var(--cyber-neon-cyan), 0 0 20px var(--cyber-neon-cyan);
   line-height: 1;
 }
 
@@ -451,9 +442,7 @@ export default {
   font-size: 4em;
   color: var(--cyber-neon-pink);
   font-weight: 300;
-  text-shadow: 
-    0 0 10px var(--cyber-neon-pink),
-    0 0 20px var(--cyber-neon-pink);
+  text-shadow: 0 0 10px var(--cyber-neon-pink), 0 0 20px var(--cyber-neon-pink);
   line-height: 1;
 }
 
@@ -529,7 +518,8 @@ export default {
 }
 
 @keyframes winnerPulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
   }
@@ -565,7 +555,7 @@ export default {
   .game-container {
     grid-template-columns: 1fr;
   }
-  
+
   .game-rules-card {
     order: -1;
   }
@@ -583,34 +573,34 @@ export default {
     transform: none;
     margin-bottom: 20px;
   }
-  
+
   .back-button:hover {
     transform: translateX(-3px);
   }
-  
+
   .game-header {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .game-title {
     width: 100%;
     margin-top: 20px;
   }
-  
+
   .game-title {
     font-size: 2.5em;
   }
-  
+
   .game-board {
     max-width: 100%;
   }
-  
+
   .mark-x,
   .mark-o {
     font-size: 3em;
   }
-  
+
   .game-info {
     flex-direction: column;
     align-items: flex-start;
@@ -618,4 +608,3 @@ export default {
   }
 }
 </style>
-

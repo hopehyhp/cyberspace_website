@@ -1,0 +1,16 @@
+node_modules
+dist
+build
+.vite
+.vscode
+.idea
+.DS_Store
+public/*.map
+server/node_modules
+server/dist
+**/*.min.js
+**/*.bundle.js
+*.log
+__pycache__
+*.pyc
+
