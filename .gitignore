@@ -1,38 +1,87 @@
-# Dependencies
+# Node dependencies
 node_modules/
-/.pnp
-.pnp.js
 
-# Testing
-/coverage
+# Build outputs
+dist/
+build/
+dist_extracted/
 
-# Production
-/dist
-/build
-
-# Misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Vue CLI / vite / bundlers
+.vite/
+.nyc_output/
+coverage/
 
 # Logs
+logs/
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-lerna-debug.log*
+
+# Runtime files
+pids/
+*.pid
+*.seed
+*.pid.lock
 
 # Editor directories and files
-.idea
-.vscode
+.vscode/
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
 
-# Server
-/server/node_modules/
-/server/database.sqlite
-/server/.env
+# OS files
+.DS_Store
+Thumbs.db
+
+# Env files (contain secrets)
+.env
+.env.*.local
+.env.local
+
+# Prettier / ESLint cache
+.eslintcache
+.prettiercache
+
+# npm cache (local)
+.npm-cache/
+
+# Bundled files
+*.bundle.js
+*.min.js
+*.map
+
+# Static maps generated in public
+public/*.map
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Server-specific
+server/node_modules/
+server/dist/
+server/*.log
+
+# Zips / downloads
+*.zip
+node_modules.zip
+server.zip
+dist.zip
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Database files (optional: uncomment if you want to ignore DB files)
+# server/database/database.sqlite
+
+# Others
+.cache/
+
+# End of file
